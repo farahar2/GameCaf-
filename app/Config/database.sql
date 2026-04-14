@@ -84,6 +84,7 @@ CREATE TABLE reservations (
 CREATE TABLE sessions (
     id INT PRIMARY KEY AUTO_INCREMENT,
     reservation_id INT NOT NULL,
+    game_id INT NOT NULL,
     started_by INT DEFAULT NULL COMMENT 'Admin who started the session',
     start_time DATETIME NOT NULL,
     end_time DATETIME DEFAULT NULL,
