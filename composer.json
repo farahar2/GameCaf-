@@ -1,0 +1,13 @@
+{
+    "name": "gamecaf/project",
+    "description": "Board Game Cafe Management System",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\Controllers\\": "app/Controllers/",
+            "App\\Models\\": "app/Models/",
+            "App\\Config\\": "app/Config/"
+        }
+    },
+    "require": {}
+}
