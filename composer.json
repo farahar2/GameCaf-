@@ -1,9 +1,9 @@
 {
-    "name": "gamecafe/gamecafe",
-    "description": "GameCafé project",
+    "name": "GAMECAF-/app",
+    "description": "Board game cafe management application",
     "autoload": {
         "psr-4": {
-            "App\\\\": "app/"
+            "App\\": "app/"
         }
     },
     "require": {}
