@@ -45,8 +45,8 @@ CREATE TABLE games (
     FULLTEXT idx_search (name, description)
 );
 
--- TABLE 4 : tables
-CREATE TABLE tables (
+-- TABLE 4 : caftables
+CREATE TABLE caftables (
     id INT PRIMARY KEY AUTO_INCREMENT,
     table_number INT UNIQUE NOT NULL,
     capacity INT NOT NULL COMMENT 'Nombre de places',
