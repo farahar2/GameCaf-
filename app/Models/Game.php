@@ -39,6 +39,37 @@ class Game
         return $stmt->fetch();
     }
 
+    public function getByCategory(int $categoryId): array
+    {
+        $sql = "SELECT games.*, categories.name AS category_name
+                FROM games
+                INNER JOIN categories ON games.category_id = categories.id
+                WHERE games.category_id = :category_id
+                ORDER BY games.name ASC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['category_id' => $categoryId]);
+
+        return $stmt->fetchAll();
+    }
+
+    public function search(string $keyword): array
+    {
+        $sql = "SELECT games.*, categories.name AS category_name
+                FROM games
+                INNER JOIN categories ON games.category_id = categories.id
+                WHERE games.name LIKE :keyword
+                   OR games.description LIKE :keyword
+                ORDER BY games.name ASC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'keyword' => '%' . $keyword . '%'
+        ]);
+
+        return $stmt->fetchAll();
+    }
+
     public function create(array $data): bool
     {
         $sql = "INSERT INTO games 
