@@ -3,19 +3,34 @@
 namespace App\Controllers;
 
 use App\Models\Game;
+use App\Models\Category;
 
 class GameController
 {
     private Game $gameModel;
+    private Category $categoryModel;
 
     public function __construct()
     {
         $this->gameModel = new Game();
+        $this->categoryModel = new Category();
     }
 
     public function index(): void
     {
-        $games = $this->gameModel->getAll();
+        $categoryId = $_GET['category_id'] ?? null;
+        $keyword = trim($_GET['search'] ?? '');
+
+        if (!empty($keyword)) {
+            $games = $this->gameModel->search($keyword);
+        } elseif (!empty($categoryId)) {
+            $games = $this->gameModel->getByCategory((int) $categoryId);
+        } else {
+            $games = $this->gameModel->getAll();
+        }
+
+        $categories = $this->categoryModel->getAll();
+
         require_once __DIR__ . '/../../views/games/index.php';
     }
 
@@ -28,7 +43,7 @@ class GameController
             return;
         }
 
-        $game = $this->gameModel->getById((int)$id);
+        $game = $this->gameModel->getById((int) $id);
 
         if (!$game) {
             http_response_code(404);
@@ -41,6 +56,7 @@ class GameController
 
     public function create(): void
     {
+        $categories = $this->categoryModel->getAll();
         require_once __DIR__ . '/../../views/games/create.php';
     }
 
@@ -59,7 +75,13 @@ class GameController
             'is_available' => isset($_POST['is_available']) ? 1 : 0,
         ];
 
-        if (empty($data['category_id']) || empty($data['name']) || empty($data['min_players']) || empty($data['max_players']) || empty($data['duration'])) {
+        if (
+            empty($data['category_id']) ||
+            empty($data['name']) ||
+            empty($data['min_players']) ||
+            empty($data['max_players']) ||
+            empty($data['duration'])
+        ) {
             echo "Please fill in all required fields.";
             return;
         }
@@ -79,7 +101,8 @@ class GameController
             return;
         }
 
-        $game = $this->gameModel->getById((int)$id);
+        $game = $this->gameModel->getById((int) $id);
+        $categories = $this->categoryModel->getAll();
 
         if (!$game) {
             echo "Game not found.";
@@ -111,7 +134,18 @@ class GameController
             'is_available' => isset($_POST['is_available']) ? 1 : 0,
         ];
 
-        $this->gameModel->update((int)$id, $data);
+        if (
+            empty($data['category_id']) ||
+            empty($data['name']) ||
+            empty($data['min_players']) ||
+            empty($data['max_players']) ||
+            empty($data['duration'])
+        ) {
+            echo "Please fill in all required fields.";
+            return;
+        }
+
+        $this->gameModel->update((int) $id, $data);
 
         header('Location: /games');
         exit;
@@ -126,9 +160,9 @@ class GameController
             return;
         }
 
-        $this->gameModel->delete((int)$id);
+        $this->gameModel->delete((int) $id);
 
         header('Location: /games');
         exit;
     }
-} ?>
+}
