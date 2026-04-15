@@ -131,4 +131,4 @@ class GameController
         header('Location: /games');
         exit;
     }
-}
+} ?>
