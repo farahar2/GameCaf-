@@ -66,7 +66,7 @@ CREATE TABLE reservations (
     reservation_time TIME NOT NULL,
     end_time TIME,
     number_of_guests INT NOT NULL,
-    status ENUM('confirmed', 'cancelled') DEFAULT 'confirmed',
+    status ENUM('pending', 'confirmed', 'completed', 'cancelled') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
@@ -85,6 +85,7 @@ CREATE TABLE sessions (
     id INT PRIMARY KEY AUTO_INCREMENT,
     reservation_id INT NOT NULL,
     game_id INT NOT NULL,
+    table_id INT NOT NULL,
     started_by INT DEFAULT NULL COMMENT 'Admin who started the session',
     start_time DATETIME NOT NULL,
     end_time DATETIME DEFAULT NULL,
@@ -94,7 +95,8 @@ CREATE TABLE sessions (
     
     FOREIGN KEY (reservation_id) REFERENCES reservations(id) ON DELETE CASCADE,
     FOREIGN KEY (started_by) REFERENCES users(id) ON DELETE SET NULL,
-    
+    FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE,
+    FOREIGN KEY (table_id) REFERENCES tables(id) ON DELETE RESTRICT,
     INDEX idx_status (status),
     INDEX idx_reservation (reservation_id),
     INDEX idx_start_time (start_time)
