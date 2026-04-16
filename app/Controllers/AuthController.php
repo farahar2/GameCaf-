@@ -11,19 +11,16 @@ class AuthController {
         $this->userModel = new User();
     }
 
-    
     public function showLogin() {
         $error = null;
         require_once __DIR__ . '/../Views/auth/login.php';
     }
 
-    
     public function showRegister() {
         $error = null;
         require_once __DIR__ . '/../Views/auth/register.php';
     }
 
-   
     public function register() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name     = $_POST['name'] ?? '';
@@ -33,19 +30,20 @@ class AuthController {
             $phone    = $_POST['phone'] ?? null;
 
             if (empty($name) || empty($email) || empty($password)) {
-                $error = "Tous les champs obligatoires ne sont pas remplis.";
+                $error = "All required fields must be filled.";
             } elseif ($password !== $confirm) {
-                $error = "Les deux mots de passe sont différents.";
+                $error = "Passwords do not match.";
             } elseif ($this->userModel->findByEmail($email)) {
-                $error = "Cet email est déjà utilisé.";
+                $error = "This email is already in use.";
             } else {
                 $success = $this->userModel->register($name, $email, $password, $phone);
                 
                 if ($success) {
+                    // Success message code for the URL
                     header('Location: index.php?action=login&msg=account_created');
                     exit();
                 } else {
-                    $error = "Une erreur est survenue lors de l'enregistrement.";
+                    $error = "An error occurred during registration.";
                 }
             }
           
@@ -53,7 +51,6 @@ class AuthController {
         }
     }
 
-   
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email    = $_POST['email'] ?? '';
@@ -70,13 +67,12 @@ class AuthController {
                 header('Location: index.php?action=home');
                 exit();
             } else {
-                $error = "Email ou mot de passe incorrect.";
+                $error = "Invalid email or password.";
                 require_once __DIR__ . '/../Views/auth/login.php';
             }
         }
     }
 
-    
     public function logout() {
         if (session_status() === PHP_SESSION_NONE) session_start();
         session_destroy();
