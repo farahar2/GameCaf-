@@ -72,7 +72,7 @@ CREATE TABLE reservations (
     
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE SET NULL,
-    FOREIGN KEY (table_id) REFERENCES tables(id) ON DELETE RESTRICT,
+    FOREIGN KEY (table_id) REFERENCES caftables(id) ON DELETE RESTRICT,
     
     UNIQUE KEY unique_booking (reservation_date, reservation_time, table_id),
     INDEX idx_user (user_id),
@@ -95,8 +95,8 @@ CREATE TABLE sessions (
     
     FOREIGN KEY (reservation_id) REFERENCES reservations(id) ON DELETE CASCADE,
     FOREIGN KEY (started_by) REFERENCES users(id) ON DELETE SET NULL,
-    FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE,
-    FOREIGN KEY (table_id) REFERENCES tables(id) ON DELETE RESTRICT,
+    FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE RESTRICT,
+    FOREIGN KEY (table_id) REFERENCES caftables(id) ON DELETE RESTRICT,
     INDEX idx_status (status),
     INDEX idx_reservation (reservation_id),
     INDEX idx_start_time (start_time)
