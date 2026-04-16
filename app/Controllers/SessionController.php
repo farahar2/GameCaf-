@@ -22,7 +22,7 @@ class SessionController {
     public function dashboard(): void {
         $activeSessions = $this->sessionModel->getActiveSessions();
         $pageTitle = "Dashboard - Sessions Actives";
-        require_once __DIR__ . '/../Views/admin/dashboard.php';
+       require_once __DIR__ . '/../views/sessions/dashboard.php';
     }
 
     //Traite le lancement d'une session
@@ -56,6 +56,6 @@ class SessionController {
     public function history(): void {
         $sessions = $this->sessionModel->getHistory();
         $pageTitle = "Historique des Sessions";
-        require_once __DIR__ . '/../Views/admin/history.php';
+        require_once __DIR__ . '/../views/sessions/history.php';
     }
 }
