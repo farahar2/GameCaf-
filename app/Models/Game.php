@@ -132,4 +132,13 @@ class Game
 
         return $stmt->execute(['id' => $id]);
     }
+    public function countAvailable(): int
+{
+    $sql    = "SELECT COUNT(*) as total 
+               FROM games 
+               WHERE is_available = true";
+    $stmt   = $this->db->query($sql); 
+    $result = $stmt->fetch();
+    return (int) $result['total'];
+}
 }
