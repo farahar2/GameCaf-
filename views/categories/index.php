@@ -37,9 +37,11 @@
                                         <strong><?= htmlspecialchars($category['name']) ?></strong>
                                     </td>
                                     <td>
-                                        <?= !empty($category['description']) 
-                                            ? htmlspecialchars($category['description']) 
-                                            : '<span class="text-muted">No description</span>' ?>
+                                        <?php if (!empty($category['description'])): ?>
+                                            <?= htmlspecialchars($category['description']) ?>
+                                        <?php else: ?>
+                                            <span class="text-muted">No description</span>
+                                        <?php endif; ?>
                                     </td>
                                     <td><?= htmlspecialchars($category['created_at']) ?></td>
                                     <td class="text-center">
