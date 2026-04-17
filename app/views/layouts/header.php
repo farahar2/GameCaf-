@@ -4,6 +4,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title><?= htmlspecialchars($pageTitle ?? 'Aji L3bo Café') ?></title>
+    <base href="<?= BASE_URL ?>/">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
@@ -126,7 +127,7 @@
                 </div>
             <?php endif; ?>
 
-            <a href="/"
+            <a href="."
                class="font-headline text-xl font-bold text-[#8d4b00] tracking-tight leading-tight">
                 Aji L3bo
             </a>
@@ -139,8 +140,8 @@
                 <?php
                 $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
                 $publicNav  = [
-                    '/'      => 'Accueil',
-                    '/games' => 'Catalogue',
+                    '.'      => 'Accueil',
+                    'games'  => 'Catalogue',
                 ];
                 foreach ($publicNav as $uri => $label):
                     $isActive = ($currentUri === $uri);
@@ -166,19 +167,19 @@
                     <?= htmlspecialchars($_SESSION['user_name'] ?? '') ?>
                 </span>
 
-                <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                    <a href="/dashboard/admin"
+                <?php $isAdmin = !empty($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'; if ($isAdmin): ?>
+                    <a href="dashboard/admin"
                        class="hidden md:inline-block bg-primary text-on-primary px-4 py-2 rounded-xl text-sm font-bold hover:scale-105 transition-transform">
                         Dashboard
                     </a>
                 <?php else: ?>
-                    <a href="/reservations/my"
+                    <a href="reservations/my"
                        class="hidden md:inline-block text-primary text-sm font-bold hover:underline">
                         Mes Réservations
                     </a>
                 <?php endif; ?>
 
-                <a href="/logout"
+                <a href="logout"
                    class="text-on-surface-variant hover:text-error transition-colors"
                    title="Déconnexion">
                     <span class="material-symbols-outlined text-2xl">logout</span>
@@ -187,11 +188,11 @@
             <?php else: ?>
 
                 <!-- Not Logged In -->
-                <a href="/login"
+                <a href="login"
                    class="hidden md:inline-block text-[#8d4b00] font-bold text-sm hover:underline">
                     Connexion
                 </a>
-                <a href="/register"
+                <a href="register"
                    class="bg-primary text-on-primary px-5 py-2.5 rounded-xl font-bold text-sm hover:scale-105 transition-transform shadow-md shadow-primary/20">
                     S'inscrire
                 </a>

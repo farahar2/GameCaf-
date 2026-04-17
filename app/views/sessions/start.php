@@ -5,7 +5,7 @@
 
     <!-- Header -->
     <div class="mb-10">
-        <a href="/sessions"
+        <a href="sessions"
            class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors mb-4 text-sm font-medium">
             <span class="material-symbols-outlined text-lg">arrow_back</span>
             Retour aux Sessions
@@ -42,7 +42,7 @@
                     </div>
                 <?php endif; ?>
 
-                <form action="/sessions" method="POST" class="space-y-8" id="start-session-form">
+                <form action="sessions" method="POST" class="space-y-8" id="start-session-form">
 
                     <!-- Step 1: Reservation (Optional) -->
                     <div>
@@ -117,10 +117,16 @@
                                                     : 'border-outline-variant/20 bg-surface-container-low hover:border-primary/30' ?>
                                                 game-card">
                                         <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container">
-                                            <?php if (!empty($game['image_url'])): ?>
-                                                <img src="<?= htmlspecialchars($game['image_url']) ?>"
+                                            <?php if (!empty($game['image_url'])): 
+                                                $gameImg = $game['image_url'];
+                                                if (str_starts_with($gameImg, '/') && !str_starts_with($gameImg, '//')) {
+                                                    $gameImg = ltrim($gameImg, '/');
+                                                }
+                                            ?>
+                                                <img src="<?= htmlspecialchars($gameImg) ?>"
                                                      alt="<?= htmlspecialchars($game['name']) ?>"
-                                                     class="w-full h-full object-cover"/>
+                                                     class="w-full h-full object-cover"
+                                                     onerror="this.onerror=null; this.src='https://placehold.co/400x300/ffdcc3/8d4b00?text=<?= urlencode(addslashes($game['name'])) ?>';"/>
                                             <?php else: ?>
                                                 <div class="w-full h-full flex items-center justify-center">
                                                     <span class="material-symbols-outlined text-on-surface-variant text-sm">casino</span>
@@ -333,29 +339,6 @@
     });
 </script>
 
-<!-- Mobile Nav -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 backdrop-blur-xl shadow-[0_-4px_30px_rgba(53,16,0,0.05)] rounded-t-3xl">
-    <?php
-    $mobileNav  = [
-        ['uri' => '/dashboard', 'icon' => 'dashboard', 'label' => 'Dashboard'],
-        ['uri' => '/games',     'icon' => 'casino',     'label' => 'Games'],
-        ['uri' => '/sessions',  'icon' => 'style',      'label' => 'Sessions'],
-        ['uri' => '/reservations', 'icon' => 'event',   'label' => 'Bookings'],
-    ];
-    $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
-    foreach ($mobileNav as $item):
-        $isActive = str_starts_with($currentUri, $item['uri']);
-    ?>
-        <a href="<?= $item['uri'] ?>"
-           class="flex flex-col items-center px-3 py-1 rounded-2xl transition-all
-                  <?= $isActive ? 'bg-[#ffdbcc] text-[#8d4b00]' : 'text-stone-500' ?>">
-            <span class="material-symbols-outlined"
-                  style="<?= $isActive ? "font-variation-settings:'FILL' 1;" : '' ?>">
-                <?= $item['icon'] ?>
-            </span>
-            <span class="text-xs font-medium"><?= $item['label'] ?></span>
-        </a>
-    <?php endforeach; ?>
-</nav>
+    <div class="md:hidden h-20"></div>
 
 <?php require __DIR__ . '/../layouts/footer.php'; ?>

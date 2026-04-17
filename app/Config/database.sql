@@ -101,3 +101,4 @@ CREATE TABLE sessions (
     INDEX idx_reservation (reservation_id),
     INDEX idx_start_time (start_time)
 );
+

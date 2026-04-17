@@ -156,7 +156,7 @@
                         <!-- Actions -->
                         <div class="col-span-2 flex justify-end gap-2">
                             <?php if ($res['status'] === 'pending'): ?>
-                                <form action="/reservations/<?= $res['id'] ?>/status" method="POST">
+                                <form action="reservations/<?= $res['id'] ?>/status" method="POST">
                                     <input type="hidden" name="status" value="confirmed"/>
                                     <button type="submit"
                                             title="Confirmer"
@@ -167,7 +167,7 @@
                             <?php endif; ?>
 
                             <?php if (in_array($res['status'], ['pending', 'confirmed'])): ?>
-                                <form action="/reservations/<?= $res['id'] ?>/status" method="POST">
+                                <form action="reservations/<?= $res['id'] ?>/status" method="POST">
                                     <input type="hidden" name="status" value="cancelled"/>
                                     <button type="submit"
                                             title="Annuler"
@@ -177,7 +177,7 @@
                                 </form>
 
                                 <?php if ($res['status'] === 'confirmed'): ?>
-                                    <a href="/sessions/start?reservation_id=<?= $res['id'] ?>"
+                                    <a href="sessions/start?reservation_id=<?= $res['id'] ?>"
                                        title="Démarrer session"
                                        class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center hover:scale-110 transition-transform">
                                         <span class="material-symbols-outlined text-sm">play_arrow</span>
@@ -185,7 +185,7 @@
                                 <?php endif; ?>
                             <?php endif; ?>
 
-                            <a href="/reservations/<?= $res['id'] ?>"
+                            <a href="reservations/<?= $res['id'] ?>"
                                title="Voir détails"
                                class="w-8 h-8 rounded-full bg-surface-container text-on-surface flex items-center justify-center hover:scale-110 transition-transform">
                                 <span class="material-symbols-outlined text-sm">visibility</span>
@@ -243,7 +243,7 @@
                     <!-- Mobile Actions -->
                     <div class="flex gap-2">
                         <?php if ($res['status'] === 'pending'): ?>
-                            <form action="/reservations/<?= $res['id'] ?>/status" method="POST" class="flex-1">
+                            <form action="reservations/<?= $res['id'] ?>/status" method="POST" class="flex-1">
                                 <input type="hidden" name="status" value="confirmed"/>
                                 <button type="submit"
                                         class="w-full py-2 bg-secondary-fixed text-on-secondary-fixed rounded-lg text-sm font-bold">
@@ -253,7 +253,7 @@
                         <?php endif; ?>
 
                         <?php if (in_array($res['status'], ['pending', 'confirmed'])): ?>
-                            <form action="/reservations/<?= $res['id'] ?>/status" method="POST" class="flex-1">
+                            <form action="reservations/<?= $res['id'] ?>/status" method="POST" class="flex-1">
                                 <input type="hidden" name="status" value="cancelled"/>
                                 <button type="submit"
                                         class="w-full py-2 bg-error-container text-on-error-container rounded-lg text-sm font-bold">
@@ -275,14 +275,14 @@
 <nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 backdrop-blur-xl shadow-[0_-4px_30px_rgba(53,16,0,0.05)] rounded-t-3xl">
     <?php
     $mobileNav  = [
-        ['uri' => '/dashboard',    'icon' => 'dashboard', 'label' => 'Dashboard'],
-        ['uri' => '/games',        'icon' => 'casino',     'label' => 'Games'],
-        ['uri' => '/sessions',     'icon' => 'style',      'label' => 'Sessions'],
-        ['uri' => '/reservations', 'icon' => 'event',      'label' => 'Bookings'],
+        ['uri' => 'dashboard',    'icon' => 'dashboard', 'label' => 'Dashboard'],
+        ['uri' => 'games',        'icon' => 'casino',     'label' => 'Games'],
+        ['uri' => 'sessions',     'icon' => 'style',      'label' => 'Sessions'],
+        ['uri' => 'reservations', 'icon' => 'event',      'label' => 'Bookings'],
     ];
     $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
     foreach ($mobileNav as $item):
-        $isActive = str_starts_with($currentUri, $item['uri']);
+        $isActive = str_starts_with($currentUri, '/' . $item['uri']);
     ?>
         <a href="<?= $item['uri'] ?>"
            class="flex flex-col items-center px-3 py-1 rounded-2xl transition-all

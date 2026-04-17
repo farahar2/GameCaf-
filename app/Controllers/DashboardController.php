@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Session;
 use App\Models\Reservation;
-use App\Models\CafTable;
+use App\Models\Table;
 use App\Models\Game;
 
 class DashboardController
@@ -30,15 +30,15 @@ class DashboardController
     {
         // Not logged in → go to login
         if (empty($_SESSION['user_id'])) {
-            header('Location: /login');
+            header('Location: ' . BASE_URL . '/login');
             exit;
         }
 
         // Redirect based on role
-        if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
-            header('Location: /dashboard/admin');
+        if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
+            header('Location: ' . BASE_URL . '/dashboard/admin');
         } else {
-            header('Location: /dashboard/client');
+            header('Location: ' . BASE_URL . '/dashboard/client');
         }
         exit;
     }
@@ -51,12 +51,12 @@ class DashboardController
     {
         // Guard: admin only
         if (empty($_SESSION['user_id'])) {
-            header('Location: /login');
+            header('Location: ' . BASE_URL . '/login');
             exit;
         }
 
-        if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-            header('Location: /dashboard/client');
+        if (empty($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+            header('Location: ' . BASE_URL . '/dashboard/client');
             exit;
         }
 
@@ -98,7 +98,7 @@ class DashboardController
         }
 
         $pageTitle = "Admin Dashboard — Aji L3bo";
-        include __DIR__ . '/../Views/dashboard/admin.php';
+        include __DIR__ . '/../views/dashboard/admin.php';
     }
 
     // ============================================================
@@ -109,13 +109,13 @@ class DashboardController
     {
         // Guard: must be logged in
         if (empty($_SESSION['user_id'])) {
-            header('Location: /login');
+            header('Location: ' . BASE_URL . '/login');
             exit;
         }
 
         // Admin should not use client dashboard
-        if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin') {
-            header('Location: /dashboard/admin');
+        if (!empty($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
+            header('Location: ' . BASE_URL . '/dashboard/admin');
             exit;
         }
 
@@ -145,6 +145,6 @@ class DashboardController
         }
 
         $pageTitle = "Mon Dashboard — Aji L3bo";
-        include __DIR__ . '/../Views/dashboard/client.php';
+        include __DIR__ . '/../views/dashboard/client.php';
     }
 }

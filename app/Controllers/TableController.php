@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\CafTable;
+use App\Models\Table;
 
 class TableController
 {
@@ -18,7 +18,7 @@ class TableController
     {
         $tables    = $this->tableModel->getAll();
         $pageTitle = "All Tables";
-        include __DIR__ . '/../Views/tables/index.php';
+        include __DIR__ . '/../views/tables/index.php';
     }
 
     // Show ONE table details
@@ -33,7 +33,7 @@ class TableController
         }
 
         $pageTitle = "Table " . $table['table_number'];
-        include __DIR__ . '/../Views/tables/show.php';
+        include __DIR__ . '/../views/tables/show.php';
     }
 
     // Toggle table availability

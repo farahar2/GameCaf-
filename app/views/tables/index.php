@@ -19,7 +19,7 @@
 
         <!-- Quick Actions -->
         <div class="flex gap-3">
-            <a href="/sessions/start"
+            <a href="sessions/start"
                class="bg-primary text-on-primary px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:scale-105 transition-transform shadow-md shadow-primary/20">
                 <span class="material-symbols-outlined text-[18px]">play_circle</span>
                 Démarrer Session
@@ -121,7 +121,7 @@
         <!-- Tables Grid (Visual) -->
         <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
             <?php foreach ($tables as $table): ?>
-                <a href="/tables/<?= $table['id'] ?>"
+                <a href="tables/<?= $table['id'] ?>"
                    class="group flex flex-col items-center gap-2 p-4 rounded-xl transition-all hover:scale-105
                           <?= $table['is_available']
                               ? 'bg-secondary-container hover:bg-secondary/20'
@@ -252,14 +252,14 @@
                         <div class="col-span-2 flex justify-end gap-2">
 
                             <!-- View -->
-                            <a href="/tables/<?= $table['id'] ?>"
+                            <a href="tables/<?= $table['id'] ?>"
                                title="Voir détails"
                                class="w-8 h-8 rounded-full bg-surface-container text-on-surface flex items-center justify-center hover:bg-primary hover:text-on-primary transition-colors">
                                 <span class="material-symbols-outlined text-sm">visibility</span>
                             </a>
 
                             <!-- Toggle Availability -->
-                            <form action="/tables/<?= $table['id'] ?>/availability" method="POST">
+                            <form action="tables/<?= $table['id'] ?>/availability" method="POST">
                                 <button type="submit"
                                         title="<?= $table['is_available'] ? 'Marquer Occupée' : 'Marquer Disponible' ?>"
                                         class="w-8 h-8 rounded-full flex items-center justify-center transition-colors
@@ -319,11 +319,11 @@
 
                         <!-- Actions -->
                         <div class="flex gap-2">
-                            <a href="/tables/<?= $table['id'] ?>"
+                            <a href="tables/<?= $table['id'] ?>"
                                class="flex-1 text-center py-2.5 bg-surface-container text-on-surface rounded-lg text-sm font-bold hover:bg-surface-container-high transition-colors">
                                 Détails
                             </a>
-                            <form action="/tables/<?= $table['id'] ?>/availability" method="POST" class="flex-1">
+                            <form action="tables/<?= $table['id'] ?>/availability" method="POST" class="flex-1">
                                 <button type="submit"
                                         class="w-full py-2.5 rounded-lg text-sm font-bold transition-colors
                                             <?= $table['is_available']
@@ -347,10 +347,10 @@
 <nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 backdrop-blur-xl shadow-[0_-4px_30px_rgba(53,16,0,0.05)] rounded-t-3xl">
     <?php
     $mobileNav  = [
-        ['uri' => '/dashboard',  'icon' => 'dashboard',       'label' => 'Dashboard'],
-        ['uri' => '/games',      'icon' => 'casino',            'label' => 'Games'],
-        ['uri' => '/tables',     'icon' => 'table_restaurant',  'label' => 'Tables'],
-        ['uri' => '/sessions',   'icon' => 'style',             'label' => 'Sessions'],
+        ['uri' => 'dashboard',  'icon' => 'dashboard',       'label' => 'Dashboard'],
+        ['uri' => 'games',      'icon' => 'casino',            'label' => 'Games'],
+        ['uri' => 'tables',     'icon' => 'table_restaurant',  'label' => 'Tables'],
+        ['uri' => 'sessions',   'icon' => 'style',             'label' => 'Sessions'],
     ];
     $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
     foreach ($mobileNav as $item):

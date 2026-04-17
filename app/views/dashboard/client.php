@@ -1,17 +1,18 @@
 <?php require __DIR__ . '/../layouts/header.php'; ?>
 
 <!-- Client Sidebar -->
+<?php $hasSidebar = true; ?>
 <aside class="hidden md:flex flex-col fixed left-0 top-0 w-72 h-full rounded-r-3xl bg-[#fff8f6] pt-8 pb-12 z-40">
     <div class="px-8 mb-10">
-        <a href="/" class="text-[#8d4b00] font-black text-2xl font-headline">🎲 Aji L3bo</a>
+        <a href="." class="text-[#8d4b00] font-black text-2xl font-headline">🎲 Aji L3bo</a>
     </div>
     <div class="flex-1">
         <?php
         $clientNav  = [
-            ['uri' => '/dashboard/client',    'icon' => 'dashboard',  'label' => 'Mon Dashboard'],
-            ['uri' => '/games',               'icon' => 'casino',      'label' => 'Catalogue'],
-            ['uri' => '/reservations/create', 'icon' => 'event',       'label' => 'Réserver'],
-            ['uri' => '/reservations/my',     'icon' => 'style',       'label' => 'Mes Réservations'],
+            ['uri' => 'dashboard/client',    'icon' => 'dashboard',  'label' => 'Mon Dashboard'],
+            ['uri' => 'games',               'icon' => 'casino',      'label' => 'Catalogue'],
+            ['uri' => 'reservations/create', 'icon' => 'event',       'label' => 'Réserver'],
+            ['uri' => 'reservations/my',     'icon' => 'style',       'label' => 'Mes Réservations'],
         ];
         $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
         foreach ($clientNav as $item):
@@ -43,9 +44,10 @@
             </p>
             <p class="text-xs text-on-surface-variant">Client</p>
         </div>
-        <a href="/logout"
-           class="material-symbols-outlined ml-auto text-stone-400 hover:text-error transition-colors">
-            logout
+        <a href="logout"
+           class="bg-[#ffdbcc] text-[#8d4b00] p-3 rounded-full hover:bg-[#ffb77d] transition-colors"
+           title="Déconnexion">
+            <span class="material-symbols-outlined">logout</span>
         </a>
     </div>
 </aside>
@@ -118,7 +120,7 @@
                     <h3 class="font-headline text-xl font-bold text-on-surface">
                         Prochaines Réservations
                     </h3>
-                    <a href="/reservations/my"
+                    <a href="reservations/my"
                        class="text-sm text-primary font-bold hover:underline">
                         Voir tout →
                     </a>
@@ -134,7 +136,7 @@
                         <p class="text-sm text-on-surface-variant mb-6">
                             Réservez votre table maintenant!
                         </p>
-                        <a href="/reservations/create"
+                        <a href="reservations/create"
                            class="bg-primary text-on-primary px-8 py-3 rounded-full font-bold text-sm shadow-lg shadow-primary/20 hover:scale-105 transition-transform">
                             Réserver maintenant
                         </a>
@@ -210,7 +212,7 @@
                                     </div>
 
                                     <!-- Cancel -->
-                                    <form action="/reservations/<?= $res['id'] ?>/status"
+                                    <form action="reservations/<?= $res['id'] ?>/status"
                                           method="POST"
                                           onsubmit="return confirm('Annuler cette réservation?')"
                                           class="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -227,7 +229,7 @@
                         <?php endforeach; ?>
 
                         <!-- New Reservation CTA -->
-                        <a href="/reservations/create"
+                        <a href="reservations/create"
                            class="block bg-surface-container-low border-2 border-dashed border-outline-variant rounded-xl p-5 text-center hover:border-primary/30 transition-colors group">
                             <span class="material-symbols-outlined text-primary text-2xl mb-1 block group-hover:scale-110 transition-transform">add_circle</span>
                             <p class="font-headline font-bold text-sm text-on-surface">
@@ -247,18 +249,25 @@
                         <h3 class="font-headline text-xl font-bold text-on-surface">
                             Jeux Recommandés
                         </h3>
-                        <a href="/games" class="text-sm text-primary font-bold hover:underline">
+                        <a href="games" class="text-sm text-primary font-bold hover:underline">
                             Voir tout →
                         </a>
                     </div>
                     <div class="flex gap-4 overflow-x-auto pb-3">
                         <?php foreach ($suggestedGames as $game): ?>
-                            <a href="/games/<?= $game['id'] ?>"
+                            <a href="games/<?= $game['id'] ?>"
                                class="min-w-[220px] bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:-translate-y-1 transition-all group">
                                 <div class="h-28 relative">
-                                    <img src="<?= htmlspecialchars($game['image_url'] ?? 'https://placehold.co/300x150/ffdcc3/8d4b00?text=' . urlencode($game['name'])) ?>"
+                                    <?php
+                                    $gameImg = !empty($game['image_url']) ? $game['image_url'] : 'https://placehold.co/300x150/ffdcc3/8d4b00?text=' . urlencode($game['name']);
+                                    if (str_starts_with($gameImg, '/') && !str_starts_with($gameImg, '//')) {
+                                        $gameImg = ltrim($gameImg, '/');
+                                    }
+                                    ?>
+                                    <img src="<?= htmlspecialchars($gameImg) ?>"
                                          alt="<?= htmlspecialchars($game['name']) ?>"
-                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                         onerror="this.onerror=null; this.src='https://placehold.co/300x150/ffdcc3/8d4b00?text=<?= urlencode(addslashes($game['name'])) ?>';"/>
                                     <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                                     <span class="absolute bottom-2 left-3 bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold px-2 py-0.5 rounded uppercase">
                                         <?= htmlspecialchars($game['category_name'] ?? 'Jeu') ?>
@@ -298,7 +307,7 @@
                     <p class="text-emerald-100 text-sm mb-4">
                         <?= count($availableTables) ?> table<?= count($availableTables) > 1 ? 's' : '' ?> disponible<?= count($availableTables) > 1 ? 's' : '' ?> maintenant
                     </p>
-                    <a href="/reservations/create"
+                    <a href="reservations/create"
                        class="inline-block bg-white text-[#1b6b51] font-bold px-6 py-2 rounded-xl text-sm hover:scale-105 transition-transform">
                         Réserver →
                     </a>
@@ -375,32 +384,8 @@
 
 </main>
 
-<!-- Mobile Nav -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 backdrop-blur-xl shadow-[0_-4px_30px_rgba(53,16,0,0.05)] rounded-t-3xl">
-    <?php
-    $mobileNav  = [
-        ['uri' => '/dashboard/client',    'icon' => 'dashboard',  'label' => 'Home'],
-        ['uri' => '/games',               'icon' => 'grid_view',   'label' => 'Catalog'],
-        ['uri' => '/reservations/create', 'icon' => 'event',       'label' => 'Book'],
-        ['uri' => '/reservations/my',     'icon' => 'person',      'label' => 'Mes Rés.'],
-    ];
-    $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
-    foreach ($mobileNav as $item):
-        $isActive = str_starts_with($currentUri, $item['uri'])
-                    && !($item['uri'] === '/' && $currentUri !== '/');
-    ?>
-        <a href="<?= $item['uri'] ?>"
-           class="flex flex-col items-center px-3 py-1 rounded-2xl transition-all
-                  <?= $isActive ? 'bg-[#ffdbcc] text-[#8d4b00]' : 'text-stone-500' ?>">
-            <span class="material-symbols-outlined"
-                  style="<?= $isActive ? "font-variation-settings:'FILL' 1;" : '' ?>">
-                <?= $item['icon'] ?>
-            </span>
-            <span class="text-xs font-medium"><?= $item['label'] ?></span>
-        </a>
-    <?php endforeach; ?>
-</nav>
-
-<div class="md:hidden h-20"></div>
+ 
+ <!-- Spacer for mobile nav handled by footer -->
+ <div class="md:hidden h-20"></div>
 
 <?php require __DIR__ . '/../layouts/footer.php'; ?>

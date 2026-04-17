@@ -17,7 +17,7 @@
             </p>
         </div>
 
-        <a href="/categories/create"
+        <a href="categories/create"
            class="bg-primary text-on-primary px-6 py-4 rounded-full font-bold flex items-center gap-2 hover:scale-105 transition-transform shadow-lg shadow-primary/20 whitespace-nowrap w-fit">
             <span class="material-symbols-outlined text-[18px]">add</span>
             Nouvelle Catégorie
@@ -101,7 +101,7 @@
             <p class="text-on-surface-variant text-sm mb-6">
                 Créez des catégories pour organiser votre catalogue de jeux.
             </p>
-            <a href="/categories/create"
+            <a href="categories/create"
                class="inline-block bg-primary text-on-primary px-8 py-3 rounded-xl font-bold hover:scale-105 transition-transform">
                 Créer une Catégorie
             </a>
@@ -151,7 +151,7 @@
 
                         <!-- Games Count -->
                         <div class="col-span-2">
-                            <a href="/games?category_id=<?= $cat['id'] ?>"
+                            <a href="games?category_id=<?= $cat['id'] ?>"
                                class="inline-flex items-center gap-1 text-sm font-bold
                                       <?= ($cat['games_count'] ?? 0) > 0
                                           ? 'text-secondary hover:underline'
@@ -164,14 +164,14 @@
                         <!-- Actions -->
                         <div class="col-span-2 flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
 
-                            <a href="/categories/<?= $cat['id'] ?>/edit"
+                            <a href="categories/<?= $cat['id'] ?>/edit"
                                title="Modifier"
                                class="w-8 h-8 rounded-full bg-surface-container text-on-surface flex items-center justify-center hover:bg-primary hover:text-on-primary transition-colors">
                                 <span class="material-symbols-outlined text-sm">edit</span>
                             </a>
 
                             <?php if (($cat['games_count'] ?? 0) === 0): ?>
-                                <form action="/categories/<?= $cat['id'] ?>/delete"
+                                <form action="categories/<?= $cat['id'] ?>/delete"
                                       method="POST"
                                       onsubmit="return confirm('Supprimer la catégorie &quot;<?= htmlspecialchars(addslashes($cat['name'])) ?>&quot;?')">
                                     <button type="submit"
@@ -217,13 +217,13 @@
                     </div>
 
                     <div class="flex gap-2">
-                        <a href="/categories/<?= $cat['id'] ?>/edit"
+                        <a href="categories/<?= $cat['id'] ?>/edit"
                            class="flex-1 text-center py-2 bg-surface-container-high text-on-surface rounded-lg text-sm font-bold hover:bg-surface-variant transition-colors">
                             ✏️ Modifier
                         </a>
 
                         <?php if (($cat['games_count'] ?? 0) === 0): ?>
-                            <form action="/categories/<?= $cat['id'] ?>/delete"
+                            <form action="categories/<?= $cat['id'] ?>/delete"
                                   method="POST"
                                   class="flex-1"
                                   onsubmit="return confirm('Supprimer cette catégorie?')">
@@ -233,7 +233,7 @@
                                 </button>
                             </form>
                         <?php else: ?>
-                            <a href="/games?category_id=<?= $cat['id'] ?>"
+                            <a href="games?category_id=<?= $cat['id'] ?>"
                                class="flex-1 text-center py-2 bg-secondary-container text-on-secondary-container rounded-lg text-sm font-bold">
                                 🎲 Voir Jeux
                             </a>
@@ -248,31 +248,8 @@
 
 </main>
 
-<!-- Mobile Nav -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 backdrop-blur-xl shadow-[0_-4px_30px_rgba(53,16,0,0.05)] rounded-t-3xl">
-    <?php
-    $mobileNav  = [
-        ['uri' => '/dashboard',   'icon' => 'dashboard', 'label' => 'Dashboard'],
-        ['uri' => '/games',       'icon' => 'casino',     'label' => 'Games'],
-        ['uri' => '/categories',  'icon' => 'category',   'label' => 'Categories'],
-        ['uri' => '/sessions',    'icon' => 'style',      'label' => 'Sessions'],
-    ];
-    $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
-    foreach ($mobileNav as $item):
-        $isActive = str_starts_with($currentUri, $item['uri']);
-    ?>
-        <a href="<?= $item['uri'] ?>"
-           class="flex flex-col items-center px-3 py-1 rounded-2xl transition-all
-                  <?= $isActive ? 'bg-[#ffdbcc] text-[#8d4b00]' : 'text-stone-500' ?>">
-            <span class="material-symbols-outlined"
-                  style="<?= $isActive ? "font-variation-settings:'FILL' 1;" : '' ?>">
-                <?= $item['icon'] ?>
-            </span>
-            <span class="text-xs font-medium"><?= $item['label'] ?></span>
-        </a>
-    <?php endforeach; ?>
-</nav>
-
-<div class="md:hidden h-20"></div>
+ 
+ <!-- Spacer for mobile nav handled by footer -->
+ <div class="md:hidden h-20"></div>
 
 <?php require __DIR__ . '/../layouts/footer.php'; ?>

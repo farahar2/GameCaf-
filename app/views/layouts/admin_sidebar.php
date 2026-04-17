@@ -1,9 +1,10 @@
 <!-- Desktop Sidebar -->
+<?php $hasSidebar = true; ?>
 <aside class="hidden md:flex flex-col fixed left-0 top-0 w-72 h-full bg-[#fff8f6] rounded-r-3xl z-40 border-r border-outline-variant/10">
 
     <!-- Logo -->
     <div class="px-8 pt-8 mb-6">
-        <a href="/"
+        <a href="."
            class="font-headline font-black text-xl text-[#8d4b00] flex items-center gap-2">
             🎲 Aji L3bo
         </a>
@@ -29,32 +30,32 @@
 
         $adminNav = [
             [
-                'uri'   => '/dashboard/admin',
+                'uri'   => 'dashboard/admin',
                 'icon'  => 'dashboard',
                 'label' => 'Dashboard',
             ],
             [
-                'uri'   => '/games',
+                'uri'   => 'games',
                 'icon'  => 'casino',
                 'label' => 'Jeux',
             ],
             [
-                'uri'   => '/categories',
+                'uri'   => 'categories',
                 'icon'  => 'category',
                 'label' => 'Catégories',
             ],
             [
-                'uri'   => '/reservations',
+                'uri'   => 'reservations',
                 'icon'  => 'event',
                 'label' => 'Réservations',
             ],
             [
-                'uri'   => '/tables',
+                'uri'   => 'tables',
                 'icon'  => 'table_restaurant',
                 'label' => 'Tables',
             ],
             [
-                'uri'   => '/sessions',
+                'uri'   => 'sessions',
                 'icon'  => 'style',
                 'label' => 'Sessions',
             ],
@@ -89,13 +90,13 @@
     <!-- Bottom: Settings + Logout -->
     <div class="px-4 pb-8 space-y-1">
 
-        <a href="/settings"
+        <a href="settings"
            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-stone-600 hover:bg-stone-100">
             <span class="material-symbols-outlined text-xl">settings</span>
             <span class="font-headline font-medium">Paramètres</span>
         </a>
 
-        <a href="/logout"
+        <a href="logout"
            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-stone-600 hover:bg-red-50 hover:text-red-600">
             <span class="material-symbols-outlined text-xl">logout</span>
             <span class="font-headline font-medium">Déconnexion</span>

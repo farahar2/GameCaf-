@@ -63,11 +63,11 @@
                     Floor Status
                 </h3>
                 <div class="flex gap-2">
-                    <a href="/sessions/history"
+                    <a href="sessions/history"
                        class="bg-surface-container-high px-4 py-2 rounded-full text-sm font-medium hover:bg-surface-variant transition-colors">
                         Historique
                     </a>
-                    <a href="/sessions/start"
+                    <a href="sessions/start"
                        class="bg-primary text-on-primary px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 hover:scale-105 transition-transform shadow-md shadow-primary/20">
                         <span class="material-symbols-outlined text-[18px]">add</span>
                         New Session
@@ -91,7 +91,7 @@
                         <p class="text-on-surface-variant text-sm mb-6">
                             Toutes les tables sont libres!
                         </p>
-                        <a href="/sessions/start"
+                        <a href="sessions/start"
                            class="inline-block bg-primary text-on-primary px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform">
                             Démarrer une Session
                         </a>
@@ -190,7 +190,7 @@
                                         <?= $timer ?>
                                     </p>
                                 </div>
-                                <form action="/sessions/<?= $session['id'] ?>/end"
+                                <form action="sessions/<?= $session['id'] ?>/end"
                                       method="POST"
                                       onsubmit="return confirm('Terminer la session de <?= htmlspecialchars(addslashes($name)) ?>?')">
                                     <button type="submit"
@@ -305,7 +305,7 @@
                                     <!-- Action Buttons -->
                                     <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <?php if ($res['status'] === 'pending'): ?>
-                                            <form action="/reservations/<?= $res['id'] ?>/status" method="POST">
+                                            <form action="reservations/<?= $res['id'] ?>/status" method="POST">
                                                 <input type="hidden" name="status" value="confirmed"/>
                                                 <button type="submit"
                                                         title="Confirmer"
@@ -316,7 +316,7 @@
                                         <?php endif; ?>
 
                                         <?php if (in_array($res['status'], ['pending', 'confirmed'])): ?>
-                                            <form action="/reservations/<?= $res['id'] ?>/status" method="POST">
+                                            <form action="reservations/<?= $res['id'] ?>/status" method="POST">
                                                 <input type="hidden" name="status" value="cancelled"/>
                                                 <button type="submit"
                                                         title="Annuler"
@@ -367,29 +367,6 @@
     updateTimers();
 </script>
 
-<!-- Mobile Nav -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 backdrop-blur-xl shadow-[0_-4px_30px_rgba(53,16,0,0.05)] rounded-t-3xl">
-    <?php
-    $mobileNav  = [
-        ['uri' => '/dashboard', 'icon' => 'dashboard', 'label' => 'Dashboard'],
-        ['uri' => '/games',     'icon' => 'casino',     'label' => 'Games'],
-        ['uri' => '/sessions',  'icon' => 'style',      'label' => 'Sessions'],
-        ['uri' => '/reservations', 'icon' => 'event',   'label' => 'Bookings'],
-    ];
-    $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
-    foreach ($mobileNav as $item):
-        $isActive = str_starts_with($currentUri, $item['uri']);
-    ?>
-        <a href="<?= $item['uri'] ?>"
-           class="flex flex-col items-center px-3 py-1 rounded-2xl transition-all
-                  <?= $isActive ? 'bg-[#ffdbcc] text-[#8d4b00]' : 'text-stone-500' ?>">
-            <span class="material-symbols-outlined"
-                  style="<?= $isActive ? "font-variation-settings:'FILL' 1;" : '' ?>">
-                <?= $item['icon'] ?>
-            </span>
-            <span class="text-xs font-medium"><?= $item['label'] ?></span>
-        </a>
-    <?php endforeach; ?>
-</nav>
+
 
 <?php require __DIR__ . '/../layouts/footer.php'; ?>

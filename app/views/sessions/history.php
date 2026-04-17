@@ -16,7 +16,7 @@
                 Toutes les sessions terminées et annulées
             </p>
         </div>
-        <a href="/sessions"
+        <a href="sessions"
            class="flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform shadow-md shadow-primary/20 w-fit">
             <span class="material-symbols-outlined">play_circle</span>
             Sessions Actives
@@ -218,29 +218,6 @@
 
 </main>
 
-<!-- Mobile Nav -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 backdrop-blur-xl shadow-[0_-4px_30px_rgba(53,16,0,0.05)] rounded-t-3xl">
-    <?php
-    $mobileNav  = [
-        ['uri' => '/dashboard', 'icon' => 'dashboard', 'label' => 'Dashboard'],
-        ['uri' => '/games',     'icon' => 'casino',     'label' => 'Games'],
-        ['uri' => '/sessions',  'icon' => 'style',      'label' => 'Sessions'],
-        ['uri' => '/reservations', 'icon' => 'event',   'label' => 'Bookings'],
-    ];
-    $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
-    foreach ($mobileNav as $item):
-        $isActive = str_starts_with($currentUri, $item['uri']);
-    ?>
-        <a href="<?= $item['uri'] ?>"
-           class="flex flex-col items-center px-3 py-1 rounded-2xl transition-all
-                  <?= $isActive ? 'bg-[#ffdbcc] text-[#8d4b00]' : 'text-stone-500' ?>">
-            <span class="material-symbols-outlined"
-                  style="<?= $isActive ? "font-variation-settings:'FILL' 1;" : '' ?>">
-                <?= $item['icon'] ?>
-            </span>
-            <span class="text-xs font-medium"><?= $item['label'] ?></span>
-        </a>
-    <?php endforeach; ?>
-</nav>
+    <div class="md:hidden h-20"></div>
 
 <?php require __DIR__ . '/../layouts/footer.php'; ?>

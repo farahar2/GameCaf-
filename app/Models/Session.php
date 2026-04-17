@@ -52,6 +52,19 @@ class Session {
         return $stmt->execute(['id' => $id]);
     }
 
+    //Alias for DashboardController
+    public function getActive(): array {
+        return $this->getActiveSessions();
+    }
+
+    //Nombre de sessions actives
+    public function countActive(): int {
+        $sql = "SELECT COUNT(*) as total FROM sessions WHERE status = 'in_progress'";
+        $stmt = $this->db->query($sql);
+        $result = $stmt->fetch();
+        return (int) $result['total'];
+    }
+
     //Historique complet
     public function getHistory(): array {
         $sql = "SELECT s.*, g.name AS game_name, t.table_number, admin_u.name AS admin_name

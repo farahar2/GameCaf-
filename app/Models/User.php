@@ -55,6 +55,13 @@ class User {
 
     
 
+    public function findByEmail(string $email): array|false {
+        $sql = "SELECT * FROM users WHERE email = ? LIMIT 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$email]);
+        return $stmt->fetch();
+    }
+
     public function getId() {
         return $this->id;
     }

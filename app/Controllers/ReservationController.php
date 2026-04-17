@@ -19,26 +19,34 @@ class ReservationController
         $this->tableModel       = new Table();
     }
 
-    //Admin - see today's reservations
+    //Admin - see ALL reservations
     public function index(): void
     {
+        $reservations = $this->reservationModel->getAll();
+        $pageTitle    = "Toutes les Réservations";
+        include __DIR__ . '/../views/reservations/index.php';
+    }
+
+    //Admin - see today's reservations
+    public function dashboard(): void
+    {
         $reservations = $this->reservationModel->getToday();
-        $pageTitle    = "Today's Reservations";
-        include __DIR__ . '/../Views/reservations/index.php';
+        $pageTitle    = "Réservations du Jour";
+        include __DIR__ . '/../views/reservations/dashboard.php';
     }
 
     // Client - see MY reservations
     public function myReservations(): void
     {
         if (empty($_SESSION['user_id'])) {
-            header('Location: /login');
+            header('Location: ' . BASE_URL . '/login');
             exit;
         }
 
         $userId       = $_SESSION['user_id'];
         $reservations = $this->reservationModel->getByUser($userId);
         $pageTitle    = "My Reservations";
-        include __DIR__ . '/../Views/reservations/my_reservations.php';
+        include __DIR__ . '/../views/reservations/my.php';
     }
 
     //Show booking form
@@ -47,7 +55,7 @@ class ReservationController
         $games     = $this->gameModel->getAll();
         $tables    = $this->tableModel->getAll();
         $pageTitle = "Book a Table";
-        include __DIR__ . '/../Views/reservations/create.php';
+        include __DIR__ . '/../views/reservations/create.php';
     }
 
     //Process the booking form
@@ -101,12 +109,12 @@ class ReservationController
             $games     = $this->gameModel->getAll();
             $tables    = $this->tableModel->getAll();
             $pageTitle = "Book a Table";
-            include __DIR__ . '/../Views/reservations/create.php';
+            include __DIR__ . '/../views/reservations/create.php';
             return;
         }
 
         if ($this->reservationModel->create($data)) {
-            header("Location: /reservations/my");
+            header('Location: ' . BASE_URL . '/reservations/my');
             exit; 
         }
 
@@ -114,7 +122,7 @@ class ReservationController
         $games     = $this->gameModel->getAll();
         $tables    = $this->tableModel->getAll();
         $pageTitle = "Book a Table";
-        include __DIR__ . '/../Views/reservations/create.php';
+        include __DIR__ . '/../views/reservations/create.php';
     }
      // Show ONE reservation detail
     public function show(string $id): void
@@ -128,7 +136,7 @@ class ReservationController
         }
 
         $pageTitle = "Reservation #" . $id;
-        include __DIR__ . '/../Views/reservations/show.php';
+        include __DIR__ . '/../views/reservations/show.php';
     }
 
     //Admin changes reservation status
@@ -147,8 +155,7 @@ class ReservationController
         $this->reservationModel->updateStatus((int) $id, $newStatus);
 
         // Redirect back to today's reservations
-        header("Location: /reservations");
+        header('Location: ' . BASE_URL . '/reservations');
         exit;
     }
     }
-    ?>

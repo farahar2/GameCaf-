@@ -152,7 +152,7 @@
         <?php endif; ?>
 
         <!-- Register Form -->
-        <form action="/register" method="POST" class="space-y-4">
+        <form action="register" method="POST" class="space-y-4">
 
             <!-- Full Name -->
             <div>
@@ -287,7 +287,7 @@
         <!-- Login Link -->
         <p class="text-center text-sm text-on-surface-variant">
             Déjà un compte?
-            <a href="/login"
+            <a href="login"
                class="text-primary font-bold hover:underline ml-1">
                 Connecte-toi →
             </a>

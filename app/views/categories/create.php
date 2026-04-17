@@ -5,7 +5,7 @@
 
     <!-- Header -->
     <div class="mb-10">
-        <a href="/categories"
+        <a href="categories"
            class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors mb-4 text-sm font-medium">
             <span class="material-symbols-outlined text-lg">arrow_back</span>
             Retour aux Catégories
@@ -35,7 +35,7 @@
             </div>
         <?php endif; ?>
 
-        <form action="<?= isset($category) ? '/categories/' . $category['id'] . '/update' : '/categories' ?>"
+        <form action="<?= isset($category) ? 'categories/' . $category['id'] . '/update' : 'categories' ?>"
               method="POST"
               class="space-y-6">
 
@@ -101,7 +101,7 @@
 
             <!-- Buttons -->
             <div class="flex gap-4 pt-2">
-                <a href="/categories"
+                <a href="categories"
                    class="flex-1 text-center py-4 bg-surface-container-high text-on-surface rounded-xl font-bold hover:bg-surface-variant transition-colors">
                     Annuler
                 </a>
@@ -123,7 +123,7 @@
                     <span class="material-symbols-outlined text-sm">warning</span>
                     Zone Dangereuse
                 </h3>
-                <form action="/categories/<?= $category['id'] ?>/delete"
+                <form action="categories/<?= $category['id'] ?>/delete"
                       method="POST"
                       onsubmit="return confirm('Supprimer définitivement la catégorie &quot;<?= htmlspecialchars(addslashes($category['name'])) ?>&quot;?')">
                     <button type="submit"

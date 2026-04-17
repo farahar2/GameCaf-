@@ -4,7 +4,7 @@
 <main class="md:ml-72 px-6 pt-8 pb-32 max-w-5xl">
 
     <!-- Back -->
-    <a href="/games"
+    <a href="games"
        class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors mb-8 text-sm font-medium">
         <span class="material-symbols-outlined text-lg">arrow_back</span>
         Retour au Catalogue
@@ -17,9 +17,16 @@
 
             <!-- Main Image -->
             <div class="w-full h-80 rounded-xl overflow-hidden bg-surface-container shadow-md">
+                <?php
+                $gameImg = !empty($game['image_url']) ? $game['image_url'] : 'https://placehold.co/600x400/ffdcc3/8d4b00?text=' . urlencode($game['name']);
+                if (str_starts_with($gameImg, '/') && !str_starts_with($gameImg, '//')) {
+                    $gameImg = ltrim($gameImg, '/');
+                }
+                ?>
                 <img alt="<?= htmlspecialchars($game['name']) ?>"
                      class="w-full h-full object-cover"
-                     src="<?= htmlspecialchars($game['image_url'] ?? 'https://placehold.co/600x400/ffdcc3/8d4b00?text=' . urlencode($game['name'])) ?>"/>
+                     src="<?= htmlspecialchars($gameImg) ?>"
+                     onerror="this.onerror=null; this.src='https://placehold.co/600x400/ffdcc3/8d4b00?text=<?= urlencode(addslashes($game['name'])) ?>';"/>
             </div>
 
             <!-- Quick Info Cards -->
@@ -121,7 +128,7 @@
             <div class="space-y-3">
 
                 <?php if ($game['is_available']): ?>
-                    <a href="/reservations/create?game_id=<?= $game['id'] ?>"
+                    <a href="reservations/create?game_id=<?= $game['id'] ?>"
                        class="w-full bg-primary text-on-primary py-4 rounded-xl font-bold text-lg hover:scale-[1.02] transition-transform shadow-lg shadow-primary/20 flex items-center justify-center gap-2 block text-center">
                         <span class="material-symbols-outlined">event_available</span>
                         Réserver avec ce Jeu
@@ -133,14 +140,14 @@
                     </div>
                 <?php endif; ?>
 
-                <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                <?php if (!empty($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
                     <div class="grid grid-cols-2 gap-3">
-                        <a href="/games/<?= $game['id'] ?>/edit"
+                        <a href="games/<?= $game['id'] ?>/edit"
                            class="py-3 bg-surface-container-high text-on-surface rounded-xl font-bold text-center hover:bg-surface-variant transition-colors flex items-center justify-center gap-2">
                             <span class="material-symbols-outlined text-lg">edit</span>
                             Modifier
                         </a>
-                        <form action="/games/<?= $game['id'] ?>/delete"
+                        <form action="games/<?= $game['id'] ?>/delete"
                               method="POST"
                               onsubmit="return confirm('Supprimer <?= htmlspecialchars(addslashes($game['name'])) ?>?')">
                             <button type="submit"
@@ -165,32 +172,8 @@
 
 </main>
 
-<!-- Mobile Nav -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 backdrop-blur-xl shadow-[0_-4px_30px_rgba(53,16,0,0.05)] rounded-t-3xl">
-    <?php
-    $mobileNav  = [
-        ['uri' => '/',      'icon' => 'home',      'label' => 'Home'],
-        ['uri' => '/games', 'icon' => 'grid_view',  'label' => 'Catalog'],
-        ['uri' => '/reservations/create', 'icon' => 'event',  'label' => 'Book'],
-        ['uri' => '/reservations/my',     'icon' => 'person', 'label' => 'Profile'],
-    ];
-    $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
-    foreach ($mobileNav as $item):
-        $isActive = str_starts_with($currentUri, $item['uri'])
-                    && !($item['uri'] === '/' && $currentUri !== '/');
-    ?>
-        <a href="<?= $item['uri'] ?>"
-           class="flex flex-col items-center px-4 py-1 rounded-2xl transition-all
-                  <?= $isActive ? 'bg-[#ffdbcc] text-[#8d4b00]' : 'text-stone-500' ?>">
-            <span class="material-symbols-outlined mb-1"
-                  style="<?= $isActive ? "font-variation-settings:'FILL' 1;" : '' ?>">
-                <?= $item['icon'] ?>
-            </span>
-            <span class="text-xs font-medium"><?= $item['label'] ?></span>
-        </a>
-    <?php endforeach; ?>
-</nav>
-
-<div class="md:hidden h-20"></div>
+ 
+ <!-- Spacer for mobile nav handled by footer -->
+ <div class="md:hidden h-20"></div>
 
 <?php require __DIR__ . '/../layouts/footer.php'; ?>

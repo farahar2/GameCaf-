@@ -35,7 +35,7 @@
             </div>
         <?php endif; ?>
 
-        <form action="/games" method="POST" class="space-y-6" enctype="multipart/form-data">
+        <form action="games" method="POST" class="space-y-6" enctype="multipart/form-data">
 
             <!-- Game Name -->
             <div>
@@ -202,7 +202,7 @@
 
             <!-- Submit -->
             <div class="flex gap-4 pt-2">
-                <a href="/games"
+                <a href="games"
                    class="flex-1 text-center py-4 bg-surface-container-high text-on-surface rounded-xl font-bold hover:bg-surface-variant transition-colors">
                     Annuler
                 </a>
@@ -218,45 +218,22 @@
 
 </main>
 
-<script>
-    // Live image preview
-    document.querySelector('input[name="image_url"]')?.addEventListener('input', function () {
-        const preview    = document.getElementById('image-preview');
-        const previewImg = document.getElementById('preview-img');
-        if (this.value.startsWith('http')) {
-            previewImg.src = this.value;
-            preview.classList.remove('hidden');
-            previewImg.onerror = () => preview.classList.add('hidden');
-        } else {
-            preview.classList.add('hidden');
-        }
-    });
-</script>
-
-<!-- Mobile Nav -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 backdrop-blur-xl shadow-[0_-4px_30px_rgba(53,16,0,0.05)] rounded-t-3xl">
-    <?php
-    $mobileNav  = [
-        ['uri' => '/dashboard', 'icon' => 'dashboard', 'label' => 'Dashboard'],
-        ['uri' => '/games',     'icon' => 'casino',     'label' => 'Games'],
-        ['uri' => '/sessions',  'icon' => 'style',      'label' => 'Sessions'],
-        ['uri' => '/reservations', 'icon' => 'event',   'label' => 'Bookings'],
-    ];
-    $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
-    foreach ($mobileNav as $item):
-        $isActive = str_starts_with($currentUri, $item['uri']);
-    ?>
-        <a href="<?= $item['uri'] ?>"
-           class="flex flex-col items-center px-3 py-1 rounded-2xl transition-all
-                  <?= $isActive ? 'bg-[#ffdbcc] text-[#8d4b00]' : 'text-stone-500' ?>">
-            <span class="material-symbols-outlined"
-                  style="<?= $isActive ? "font-variation-settings:'FILL' 1;" : '' ?>">
-                <?= $item['icon'] ?>
-            </span>
-            <span class="text-xs font-medium"><?= $item['label'] ?></span>
-        </a>
-    <?php endforeach; ?>
-</nav>
+    <script>
+        // Live image preview
+        document.querySelector('input[name="image_url"]')?.addEventListener('input', function () {
+            const preview    = document.getElementById('image-preview');
+            const previewImg = document.getElementById('preview-img');
+            if (this.value.startsWith('http')) {
+                previewImg.src = this.value;
+                preview.classList.remove('hidden');
+                previewImg.onerror = () => preview.classList.add('hidden');
+            } else {
+                preview.classList.add('hidden');
+            }
+        });
+    </script>
+    
+    <div class="md:hidden h-20"></div>
 
 <div class="md:hidden h-20"></div>
 

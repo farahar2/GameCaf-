@@ -18,7 +18,7 @@ class Game
     {
         $sql = "SELECT games.*, categories.name AS category_name
                 FROM games
-                INNER JOIN categories ON games.category_id = categories.id
+                LEFT JOIN categories ON games.category_id = categories.id
                 ORDER BY games.created_at DESC";
 
         $stmt = $this->db->query($sql);
@@ -29,7 +29,7 @@ class Game
     {
         $sql = "SELECT games.*, categories.name AS category_name
                 FROM games
-                INNER JOIN categories ON games.category_id = categories.id
+                LEFT JOIN categories ON games.category_id = categories.id
                 WHERE games.id = :id
                 LIMIT 1";
 
@@ -43,7 +43,7 @@ class Game
     {
         $sql = "SELECT games.*, categories.name AS category_name
                 FROM games
-                INNER JOIN categories ON games.category_id = categories.id
+                LEFT JOIN categories ON games.category_id = categories.id
                 WHERE games.category_id = :category_id
                 ORDER BY games.name ASC";
 
@@ -57,7 +57,7 @@ class Game
     {
         $sql = "SELECT games.*, categories.name AS category_name
                 FROM games
-                INNER JOIN categories ON games.category_id = categories.id
+                LEFT JOIN categories ON games.category_id = categories.id
                 WHERE games.name LIKE :keyword
                    OR games.description LIKE :keyword
                 ORDER BY games.name ASC";

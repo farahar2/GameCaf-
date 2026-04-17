@@ -33,13 +33,11 @@ class GameController
         $categories = $this->categoryModel->getAll();
         $pageTitle  = "Catalogue de Jeux";
 
-        include __DIR__ . '/../Views/games/index.php';
+        include __DIR__ . '/../views/games/index.php';
     }
 
-    public function show(): void
+    public function show(string $id): void
     {
-        $id = $_GET['id'] ?? null;
-
         if (!$id) {
             echo "Game ID is required.";
             return;
@@ -53,13 +51,13 @@ class GameController
             return;
         }
 
-        require_once __DIR__ . '/../../views/games/show.php';
+        require_once __DIR__ . '/../views/games/show.php';
     }
 
     public function create(): void
     {
         $categories = $this->categoryModel->getAll();
-        require_once __DIR__ . '/../../views/games/create.php';
+        require_once __DIR__ . '/../views/games/create.php';
     }
 
     public function store(): void
@@ -90,14 +88,12 @@ class GameController
 
         $this->gameModel->create($data);
 
-        header('Location: /games');
+        header('Location: ' . BASE_URL . '/games');
         exit;
     }
 
-    public function edit(): void
+    public function edit(string $id): void
     {
-        $id = $_GET['id'] ?? null;
-
         if (!$id) {
             echo "Game ID is required.";
             return;
@@ -111,13 +107,11 @@ class GameController
             return;
         }
 
-        require_once __DIR__ . '/../../views/games/edit.php';
+        require_once __DIR__ . '/../views/games/edit.php';
     }
 
-    public function update(): void
+    public function update(string $id): void
     {
-        $id = $_POST['id'] ?? null;
-
         if (!$id) {
             echo "Game ID is required.";
             return;
@@ -149,14 +143,12 @@ class GameController
 
         $this->gameModel->update((int) $id, $data);
 
-        header('Location: /games');
+        header('Location: ' . BASE_URL . '/games');
         exit;
     }
 
-    public function delete(): void
+    public function delete(string $id): void
     {
-        $id = $_POST['id'] ?? null;
-
         if (!$id) {
             echo "Game ID is required.";
             return;
@@ -164,7 +156,7 @@ class GameController
 
         $this->gameModel->delete((int) $id);
 
-        header('Location: /games');
+        header('Location: ' . BASE_URL . '/games');
         exit;
     }
 }

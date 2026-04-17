@@ -1,17 +1,18 @@
 <?php require __DIR__ . '/../layouts/header.php'; ?>
 
 <!-- Client Sidebar -->
+<?php $hasSidebar = true; ?>
 <aside class="hidden md:flex flex-col fixed left-0 top-0 w-72 h-full rounded-r-3xl bg-[#fff8f6] pt-8 pb-12 z-40">
     <div class="px-8 mb-12">
-        <a href="/" class="text-[#8d4b00] font-black text-2xl font-headline">Aji L3bo</a>
+        <a href="." class="text-[#8d4b00] font-black text-2xl font-headline">Aji L3bo</a>
     </div>
     <div class="flex-1">
         <?php
         $clientNav  = [
-            ['uri' => '/',                    'icon' => 'home',    'label' => 'Accueil'],
-            ['uri' => '/games',               'icon' => 'casino',  'label' => 'Catalogue'],
-            ['uri' => '/reservations/my',     'icon' => 'style',   'label' => 'Mes Réservations'],
-            ['uri' => '/reservations/create', 'icon' => 'event',   'label' => 'Réserver'],
+            ['uri' => '.',                    'icon' => 'home',    'label' => 'Accueil'],
+            ['uri' => 'games',               'icon' => 'casino',  'label' => 'Catalogue'],
+            ['uri' => 'reservations/my',     'icon' => 'style',   'label' => 'Mes Réservations'],
+            ['uri' => 'reservations/create', 'icon' => 'event',   'label' => 'Réserver'],
         ];
         $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
         foreach ($clientNav as $item):
@@ -43,7 +44,7 @@
             </p>
             <p class="text-xs text-on-surface-variant">Client</p>
         </div>
-        <a href="/logout"
+        <a href="logout"
            class="material-symbols-outlined ml-auto text-stone-400 hover:text-error transition-colors">
             logout
         </a>
@@ -54,7 +55,7 @@
 
     <!-- Header -->
     <div class="mb-10">
-        <a href="/reservations/my"
+        <a href="reservations/my"
            class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors mb-4 text-sm font-medium">
             <span class="material-symbols-outlined text-lg">arrow_back</span>
             Mes Réservations
@@ -88,7 +89,7 @@
                     </div>
                 <?php endif; ?>
 
-                <form action="/reservations" method="POST" class="space-y-8">
+                <form action="reservations" method="POST" class="space-y-8">
 
                     <!-- Step 1: Date & Time -->
                     <div>
@@ -304,9 +305,16 @@
                                                 game-radio-card">
                                         <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container">
                                             <?php if (!empty($game['image_url'])): ?>
-                                                <img src="<?= htmlspecialchars($game['image_url']) ?>"
+                                                <?php
+                                                $gameImg = $game['image_url'];
+                                                if (str_starts_with($gameImg, '/') && !str_starts_with($gameImg, '//')) {
+                                                    $gameImg = ltrim($gameImg, '/');
+                                                }
+                                                ?>
+                                                <img src="<?= htmlspecialchars($gameImg) ?>"
                                                      alt="<?= htmlspecialchars($game['name']) ?>"
-                                                     class="w-full h-full object-cover"/>
+                                                     class="w-full h-full object-cover"
+                                                     onerror="this.onerror=null; this.src='https://placehold.co/100x100/ffdcc3/8d4b00?text=<?= urlencode(addslashes($game['name'])) ?>';"/>
                                             <?php else: ?>
                                                 <div class="w-full h-full flex items-center justify-center">
                                                     <span class="material-symbols-outlined text-on-surface-variant text-sm">casino</span>
@@ -474,32 +482,8 @@
     });
 </script>
 
-<!-- Mobile Nav -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 backdrop-blur-xl shadow-[0_-4px_30px_rgba(53,16,0,0.05)] rounded-t-3xl">
-    <?php
-    $mobileNav  = [
-        ['uri' => '/',                    'icon' => 'home',      'label' => 'Home'],
-        ['uri' => '/games',               'icon' => 'grid_view',  'label' => 'Catalog'],
-        ['uri' => '/reservations/create', 'icon' => 'event',      'label' => 'Book'],
-        ['uri' => '/reservations/my',     'icon' => 'person',     'label' => 'Profile'],
-    ];
-    $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
-    foreach ($mobileNav as $item):
-        $isActive = str_starts_with($currentUri, $item['uri'])
-                    && !($item['uri'] === '/' && $currentUri !== '/');
-    ?>
-        <a href="<?= $item['uri'] ?>"
-           class="flex flex-col items-center px-4 py-1 rounded-2xl transition-all
-                  <?= $isActive ? 'bg-[#ffdbcc] text-[#8d4b00]' : 'text-stone-500' ?>">
-            <span class="material-symbols-outlined"
-                  style="<?= $isActive ? "font-variation-settings:'FILL' 1;" : '' ?>">
-                <?= $item['icon'] ?>
-            </span>
-            <span class="text-xs font-medium"><?= $item['label'] ?></span>
-        </a>
-    <?php endforeach; ?>
-</nav>
-
-<div class="md:hidden h-20"></div>
+ 
+ <!-- Spacer for mobile nav handled by footer -->
+ <div class="md:hidden h-20"></div>
 
 <?php require __DIR__ . '/../layouts/footer.php'; ?>

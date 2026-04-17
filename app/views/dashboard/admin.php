@@ -24,7 +24,7 @@
             <span class="material-symbols-outlined text-primary mb-3 block">category</span>
             <p class="text-on-surface-variant text-sm font-medium">Total Jeux</p>
             <h3 class="text-2xl font-bold font-headline mt-1"><?= $totalGames ?></h3>
-            <a href="/games" class="text-xs text-primary font-medium mt-2 block hover:underline">
+            <a href="games" class="text-xs text-primary font-medium mt-2 block hover:underline">
                 Gérer →
             </a>
         </div>
@@ -36,7 +36,7 @@
                 <?= count($availableTables) ?>
                 <span class="text-sm font-normal">/ <?= count($allTables) ?></span>
             </h3>
-            <a href="/tables" class="text-xs text-secondary font-medium mt-2 block hover:underline">
+            <a href="tables" class="text-xs text-secondary font-medium mt-2 block hover:underline">
                 Voir tables →
             </a>
         </div>
@@ -47,7 +47,7 @@
             <h3 class="text-2xl font-bold font-headline mt-1">
                 <?= count($todayReservations) ?>
             </h3>
-            <a href="/reservations/dashboard" class="text-xs text-primary font-medium mt-2 block hover:underline">
+            <a href="reservations/dashboard" class="text-xs text-primary font-medium mt-2 block hover:underline">
                 Voir planning →
             </a>
         </div>
@@ -58,7 +58,7 @@
             <h3 class="text-2xl font-bold font-headline mt-1 text-on-primary-container">
                 <?= $activeCount ?>
             </h3>
-            <a href="/sessions" class="text-xs text-on-primary-container/80 font-medium mt-2 block hover:underline">
+            <a href="sessions" class="text-xs text-on-primary-container/80 font-medium mt-2 block hover:underline">
                 Floor status →
             </a>
         </div>
@@ -82,7 +82,7 @@
                             </span>
                         <?php endif; ?>
                     </h3>
-                    <a href="/sessions/start"
+                    <a href="sessions/start"
                        class="bg-primary text-on-primary px-4 py-2 rounded-full text-sm font-medium flex items-center gap-1 hover:scale-105 transition-transform shadow-md shadow-primary/20">
                         <span class="material-symbols-outlined text-[18px]">add</span>
                         New Session
@@ -169,7 +169,7 @@
                                        data-start="<?= $session['start_time'] ?>">
                                         <?= $timer ?>
                                     </p>
-                                    <form action="/sessions/<?= $session['id'] ?>/end"
+                                    <form action="sessions/<?= $session['id'] ?>/end"
                                           method="POST"
                                           onsubmit="return confirm('Terminer?')">
                                         <button type="submit"
@@ -185,7 +185,7 @@
 
                     <!-- Open Session Placeholder -->
                     <?php if (!empty($availableTables)): ?>
-                        <a href="/sessions/start"
+                        <a href="sessions/start"
                            class="bg-surface-container-low border-2 border-dashed border-outline-variant/30 p-6 rounded-lg flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:opacity-100 transition-all cursor-pointer min-h-[160px]">
                             <span class="material-symbols-outlined text-3xl mb-2">add_circle</span>
                             <p class="font-headline font-bold text-sm">Ouvrir Session</p>
@@ -204,7 +204,7 @@
                     <h3 class="font-headline text-xl font-bold text-on-surface">
                         Réservations du Jour
                     </h3>
-                    <a href="/reservations/dashboard"
+                    <a href="reservations/dashboard"
                        class="text-sm text-primary font-bold hover:underline flex items-center gap-1">
                         Voir tout
                         <span class="material-symbols-outlined text-sm">arrow_forward</span>
@@ -278,7 +278,7 @@
 
                                 <div class="col-span-4 flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <?php if ($res['status'] === 'pending'): ?>
-                                        <form action="/reservations/<?= $res['id'] ?>/status" method="POST">
+                                        <form action="reservations/<?= $res['id'] ?>/status" method="POST">
                                             <input type="hidden" name="status" value="confirmed"/>
                                             <button type="submit"
                                                     class="w-7 h-7 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center hover:scale-110 transition-transform"
@@ -288,7 +288,7 @@
                                         </form>
                                     <?php endif; ?>
                                     <?php if (in_array($res['status'], ['pending', 'confirmed'])): ?>
-                                        <form action="/reservations/<?= $res['id'] ?>/status" method="POST">
+                                        <form action="reservations/<?= $res['id'] ?>/status" method="POST">
                                             <input type="hidden" name="status" value="cancelled"/>
                                             <button type="submit"
                                                     class="w-7 h-7 rounded-full bg-error-container text-on-error-container flex items-center justify-center hover:scale-110 transition-transform"
@@ -297,7 +297,7 @@
                                             </button>
                                         </form>
                                         <?php if ($res['status'] === 'confirmed'): ?>
-                                            <a href="/sessions/start?reservation_id=<?= $res['id'] ?>"
+                                            <a href="sessions/start?reservation_id=<?= $res['id'] ?>"
                                                class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center hover:scale-110 transition-transform"
                                                title="Démarrer session">
                                                 <span class="material-symbols-outlined text-xs">play_arrow</span>
@@ -310,7 +310,7 @@
                         <?php endforeach; ?>
 
                         <?php if (count($todayReservations) > 6): ?>
-                            <a href="/reservations/dashboard"
+                            <a href="reservations/dashboard"
                                class="block text-center py-3 text-sm font-bold text-primary hover:bg-surface-container-low transition-colors">
                                 + <?= count($todayReservations) - 6 ?> autres
                             </a>
@@ -415,14 +415,14 @@
                                     </p>
                                 </div>
                                 <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <form action="/reservations/<?= $res['id'] ?>/status" method="POST">
+                                    <form action="reservations/<?= $res['id'] ?>/status" method="POST">
                                         <input type="hidden" name="status" value="confirmed"/>
                                         <button type="submit"
                                                 class="w-7 h-7 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center hover:scale-110 transition-transform">
                                             <span class="material-symbols-outlined text-xs" style="font-variation-settings:'FILL' 1;">check</span>
                                         </button>
                                     </form>
-                                    <form action="/reservations/<?= $res['id'] ?>/status" method="POST">
+                                    <form action="reservations/<?= $res['id'] ?>/status" method="POST">
                                         <input type="hidden" name="status" value="cancelled"/>
                                         <button type="submit"
                                                 class="w-7 h-7 rounded-full bg-error-container text-on-error-container flex items-center justify-center hover:scale-110 transition-transform">
@@ -453,7 +453,7 @@
                                 <p class="text-[10px] text-emerald-200">
                                     <?= $activeCount ?> session<?= $activeCount > 1 ? 's' : '' ?> active<?= $activeCount > 1 ? 's' : '' ?>
                                 </p>
-                                <a href="/sessions"
+                                <a href="sessions"
                                    class="mt-2 inline-block text-[10px] font-bold bg-white text-[#1b6b51] px-2 py-1 rounded">
                                     FLOOR STATUS
                                 </a>
@@ -493,10 +493,10 @@
 <nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 backdrop-blur-xl shadow-[0_-4px_30px_rgba(53,16,0,0.05)] rounded-t-3xl">
     <?php
     $mobileNav  = [
-        ['uri' => '/dashboard',    'icon' => 'dashboard', 'label' => 'Dashboard'],
-        ['uri' => '/games',        'icon' => 'casino',     'label' => 'Games'],
-        ['uri' => '/sessions',     'icon' => 'style',      'label' => 'Sessions'],
-        ['uri' => '/reservations', 'icon' => 'event',      'label' => 'Bookings'],
+        ['uri' => 'dashboard',    'icon' => 'dashboard', 'label' => 'Dashboard'],
+        ['uri' => 'games',        'icon' => 'casino',     'label' => 'Games'],
+        ['uri' => 'sessions',     'icon' => 'style',      'label' => 'Sessions'],
+        ['uri' => 'reservations', 'icon' => 'event',      'label' => 'Bookings'],
     ];
     $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
     foreach ($mobileNav as $item):

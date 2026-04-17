@@ -20,7 +20,7 @@ class CategoryController
 
         $categories = $this->categoryModel->getAllWithCount();
         $pageTitle  = "Catégories";
-        include __DIR__ . '/../Views/categories/index.php';
+        include __DIR__ . '/../views/categories/index.php';
     }
 
     // Show create form
@@ -29,7 +29,7 @@ class CategoryController
         $this->guardAdmin();
 
         $pageTitle = "Nouvelle Catégorie";
-        include __DIR__ . '/../Views/categories/create.php';
+        include __DIR__ . '/../views/categories/create.php';
     }
 
     // Store new category
@@ -45,7 +45,7 @@ class CategoryController
 
         if (!empty($errors)) {
             $pageTitle = "Nouvelle Catégorie";
-            include __DIR__ . '/../Views/categories/create.php';
+            include __DIR__ . '/../views/categories/create.php';
             return;
         }
 
@@ -54,7 +54,7 @@ class CategoryController
             'description' => trim($_POST['description'] ?? ''),
         ]);
 
-        header('Location: /categories?success=created');
+        header('Location: ' . BASE_URL . '/categories?success=created');
         exit;
     }
 
@@ -72,7 +72,7 @@ class CategoryController
         }
 
         $pageTitle = "Modifier: " . htmlspecialchars($category['name']);
-        include __DIR__ . '/../Views/categories/create.php'; // Reuse create view!
+        include __DIR__ . '/../views/categories/create.php'; // Reuse create view!
     }
 
     // Update category
@@ -89,7 +89,7 @@ class CategoryController
         if (!empty($errors)) {
             $category  = $this->categoryModel->getByIdWithCount((int) $id);
             $pageTitle = "Modifier Catégorie";
-            include __DIR__ . '/../Views/categories/create.php';
+            include __DIR__ . '/../views/categories/create.php';
             return;
         }
 
@@ -98,7 +98,7 @@ class CategoryController
             'description' => trim($_POST['description'] ?? ''),
         ]);
 
-        header('Location: /categories?success=updated');
+        header('Location: ' . BASE_URL . '/categories?success=updated');
         exit;
     }
 
@@ -110,9 +110,9 @@ class CategoryController
         $deleted = $this->categoryModel->delete((int) $id);
 
         if ($deleted) {
-            header('Location: /categories?success=deleted');
+            header('Location: ' . BASE_URL . '/categories?success=deleted');
         } else {
-            header('Location: /categories?error=has_games');
+            header('Location: ' . BASE_URL . '/categories?error=has_games');
         }
         exit;
     }
@@ -121,11 +121,11 @@ class CategoryController
     private function guardAdmin(): void
     {
         if (empty($_SESSION['user_id'])) {
-            header('Location: /login');
+            header('Location: ' . BASE_URL . '/login');
             exit;
         }
-        if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-            header('Location: /');
+        if (empty($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+            header('Location: ' . BASE_URL . '/');
             exit;
         }
     }

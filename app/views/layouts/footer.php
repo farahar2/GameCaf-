@@ -3,7 +3,7 @@
 <!-- ============================================================
      FOOTER
      ============================================================ -->
-<footer class="bg-inverse-surface text-inverse-on-surface py-16 px-6 md:px-16 mt-auto">
+<footer class="bg-inverse-surface text-inverse-on-surface py-16 px-6 md:px-16 mt-auto <?= !empty($hasSidebar) ? 'md:ml-72' : '' ?>">
     <div class="max-w-6xl mx-auto">
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
@@ -70,19 +70,19 @@
                 <ul class="text-sm space-y-3 text-inverse-on-surface/70">
                     <?php
                     $footerLinks = [
-                        '/games'               => 'Catalogue de Jeux',
-                        '/reservations/create' => 'Réserver une Table',
-                        '/login'               => 'Connexion',
-                        '/register'            => 'Créer un Compte',
+                        'games'               => 'Catalogue de Jeux',
+                        'reservations/create' => 'Réserver une Table',
+                        'login'               => 'Connexion',
+                        'register'            => 'Créer un Compte',
                     ];
 
                     // Adjust links if logged in
                     if (!empty($_SESSION['user_id'])) {
                         $footerLinks = [
-                            '/games'             => 'Catalogue de Jeux',
-                            '/reservations/create' => 'Réserver une Table',
-                            '/reservations/my'   => 'Mes Réservations',
-                            '/logout'            => 'Déconnexion',
+                            'games'             => 'Catalogue de Jeux',
+                            'reservations/create' => 'Réserver une Table',
+                            'reservations/my'   => 'Mes Réservations',
+                            'logout'            => 'Déconnexion',
                         ];
                     }
 
@@ -145,29 +145,29 @@
 <?php
 // Determine which mobile nav to show
 $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
-$isAdmin    = !empty($_SESSION['role']) && $_SESSION['role'] === 'admin';
+$isAdmin    = !empty($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 $isLoggedIn = !empty($_SESSION['user_id']);
 
 if ($isAdmin):
     $mobileNav = [
-        ['uri' => '/dashboard/admin', 'icon' => 'dashboard',      'label' => 'Dashboard'],
-        ['uri' => '/games',           'icon' => 'casino',           'label' => 'Jeux'],
-        ['uri' => '/sessions',        'icon' => 'style',            'label' => 'Sessions'],
-        ['uri' => '/reservations',    'icon' => 'event',            'label' => 'Réservations'],
+        ['uri' => 'dashboard/admin', 'icon' => 'dashboard',      'label' => 'Dashboard'],
+        ['uri' => 'games',           'icon' => 'casino',           'label' => 'Jeux'],
+        ['uri' => 'sessions',        'icon' => 'style',            'label' => 'Sessions'],
+        ['uri' => 'reservations',    'icon' => 'event',            'label' => 'Réservations'],
     ];
 elseif ($isLoggedIn):
     $mobileNav = [
-        ['uri' => '/',                    'icon' => 'home',      'label' => 'Accueil'],
-        ['uri' => '/games',               'icon' => 'grid_view',  'label' => 'Catalogue'],
-        ['uri' => '/reservations/create', 'icon' => 'event',      'label' => 'Réserver'],
-        ['uri' => '/reservations/my',     'icon' => 'person',     'label' => 'Mes Rés.'],
+        ['uri' => '.',                    'icon' => 'home',      'label' => 'Accueil'],
+        ['uri' => 'games',               'icon' => 'grid_view',  'label' => 'Catalogue'],
+        ['uri' => 'reservations/create', 'icon' => 'event',      'label' => 'Réserver'],
+        ['uri' => 'reservations/my',     'icon' => 'person',     'label' => 'Mes Rés.'],
     ];
 else:
     $mobileNav = [
-        ['uri' => '/',        'icon' => 'home',      'label' => 'Accueil'],
-        ['uri' => '/games',   'icon' => 'grid_view',  'label' => 'Catalogue'],
-        ['uri' => '/login',   'icon' => 'login',      'label' => 'Connexion'],
-        ['uri' => '/register','icon' => 'person_add', 'label' => 'Inscription'],
+        ['uri' => '.',        'icon' => 'home',      'label' => 'Accueil'],
+        ['uri' => 'games',   'icon' => 'grid_view',  'label' => 'Catalogue'],
+        ['uri' => 'login',   'icon' => 'login',      'label' => 'Connexion'],
+        ['uri' => 'register','icon' => 'person_add', 'label' => 'Inscription'],
     ];
 endif;
 ?>

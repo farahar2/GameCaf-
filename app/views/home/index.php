@@ -15,14 +15,14 @@
             Casablanca's finest tabletop collection.
         </p>
         <div class="flex flex-wrap gap-4">
-            <a href="/reservations/create"
+            <a href="reservations/create"
                class="bg-primary text-on-primary px-8 py-4 rounded-xl font-bold text-lg
                       hover:scale-105 transition-transform flex items-center gap-2
                       shadow-xl shadow-primary/20">
                 Book a Table
                 <span class="material-symbols-outlined">calendar_month</span>
             </a>
-            <a href="/games"
+            <a href="games"
                class="bg-surface-container-highest text-primary px-8 py-4 rounded-xl
                       font-bold text-lg hover:bg-surface-container-high transition-colors">
                 Explore Catalog
@@ -119,7 +119,7 @@
 
             foreach ($categories as $cat):
                 $isActive = ($currentCategory === $cat);
-                $href = ($cat === 'All Games') ? '/games' : '/games?category=' . urlencode($cat);
+                $href = ($cat === 'All Games') ? 'games' : 'games?category=' . urlencode($cat);
             ?>
                 <a href="<?= $href ?>"
                    class="px-6 py-2 rounded-full font-medium text-sm transition-colors
@@ -152,7 +152,7 @@
                     <p class="text-white/80 max-w-md mt-2">
                         <?= htmlspecialchars(substr($featured['description'] ?? '', 0, 120)) ?>...
                     </p>
-                    <a href="/games/<?= $featured['id'] ?>"
+                    <a href="games/<?= $featured['id'] ?>"
                        class="inline-block mt-4 bg-white/20 backdrop-blur text-white px-6 py-2 rounded-lg hover:bg-white/30 transition-colors w-fit">
                         View Details →
                     </a>
@@ -199,7 +199,7 @@
                             <span>👥 <?= $game['min_players'] ?>-<?= $game['max_players'] ?></span>
                             <span>⏱️ <?= $game['duration'] ?>min</span>
                         </div>
-                        <a href="/games/<?= $game['id'] ?>"
+                        <a href="games/<?= $game['id'] ?>"
                            class="w-10 h-10 rounded-full bg-primary-fixed text-primary flex items-center justify-center hover:bg-primary hover:text-on-primary transition-colors">
                             <span class="material-symbols-outlined">arrow_forward</span>
                         </a>
@@ -211,7 +211,7 @@
 
         <!-- View All Button -->
         <div class="text-center mt-12">
-            <a href="/games"
+            <a href="games"
                class="inline-block bg-surface-container-highest text-primary px-8 py-3 rounded-xl font-bold hover:bg-primary-fixed transition-colors">
                 View Full Catalog →
             </a>
@@ -271,7 +271,7 @@
                 </div>
             <?php endif; ?>
 
-            <form action="/reservations" method="POST" class="space-y-6">
+            <form action="reservations" method="POST" class="space-y-6">
                 <div class="grid md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-bold text-on-surface mb-2">Date</label>

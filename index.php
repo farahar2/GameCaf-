@@ -1,5 +1,11 @@
 <?php
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+define('BASE_URL', '/GameCafé');
+
 require __DIR__ . '/vendor/autoload.php';
 
 use App\Controllers\AuthController;
@@ -14,11 +20,7 @@ $url = isset($_GET['url']) ? rtrim($_GET['url'], '/') : '';
 $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($url) {
-    /*
-    |--------------------------------------------------------------------------
-    | Auth Routes
-    |--------------------------------------------------------------------------
-    */
+ 
     case '':
         (new DashboardController())->admin();
         break;
@@ -43,11 +45,7 @@ switch ($url) {
         (new AuthController())->logout();
         break;
 
-    /*
-    |--------------------------------------------------------------------------
-    | Games Routes
-    |--------------------------------------------------------------------------
-    */
+    
     case 'games':
         (new GameController())->index();
         break;
@@ -66,27 +64,9 @@ switch ($url) {
         }
         break;
 
-    case 'games/edit':
-        (new GameController())->edit();
-        break;
 
-    case 'games/update':
-        if ($method === 'POST') {
-            (new GameController())->update();
-        }
-        break;
 
-    case 'games/delete':
-        if ($method === 'POST') {
-            (new GameController())->delete();
-        }
-        break;
-
-    /*
-    |--------------------------------------------------------------------------
-    | Categories Routes
-    |--------------------------------------------------------------------------
-    */
+  
     case 'categories':
         (new CategoryController())->index();
         break;
@@ -121,11 +101,6 @@ switch ($url) {
         }
         break;
 
-    /*
-    |--------------------------------------------------------------------------
-    | Reservations Routes
-    |--------------------------------------------------------------------------
-    */
     case 'reservations':
         (new ReservationController())->index();
         break;
@@ -140,15 +115,18 @@ switch ($url) {
         }
         break;
 
+    case 'reservations':
+        (new ReservationController())->index();
+        break;
+
     case 'reservations/dashboard':
         (new ReservationController())->dashboard();
         break;
 
-    /*
-    |--------------------------------------------------------------------------
-    | Sessions Routes
-    |--------------------------------------------------------------------------
-    */
+    case 'reservations/my':
+        (new ReservationController())->myReservations();
+        break;
+
     case 'sessions':
         (new SessionController())->dashboard();
         break;
@@ -189,16 +167,63 @@ switch ($url) {
     | Dashboard Routes
     |--------------------------------------------------------------------------
     */
-    case 'admin/dashboard':
+    case 'dashboard/admin':
         (new DashboardController())->admin();
         break;
 
-    case 'client/dashboard':
+    case 'dashboard/client':
         (new DashboardController())->client();
         break;
 
     default:
-        http_response_code(404);
-        echo "Page not found.";
+        // Handle dynamic routes: tables/{id} and tables/{id}/availability
+        if (preg_match('#^tables/(\d+)/availability$#', $url, $matches)) {
+            if ($method === 'POST') {
+                (new TableController())->updateAvailability($matches[1]);
+            }
+        } elseif (preg_match('#^tables/(\d+)$#', $url, $matches)) {
+            (new TableController())->show($matches[1]);
+        }
+        // Handle dynamic routes: reservations/{id} and reservations/{id}/status
+        elseif (preg_match('#^reservations/(\d+)/status$#', $url, $matches)) {
+            if ($method === 'POST') {
+                (new ReservationController())->updateStatus($matches[1]);
+            }
+        } elseif (preg_match('#^reservations/(\d+)$#', $url, $matches)) {
+            (new ReservationController())->show($matches[1]);
+        }
+        // Handle dynamic routes: sessions/{id}/stop
+        elseif (preg_match('#^sessions/(\d+)/stop$#', $url, $matches)) {
+            (new SessionController())->stop((int) $matches[1]);
+        }
+        // Handle dynamic routes: games
+        elseif (preg_match('#^games/(\d+)/edit$#', $url, $matches)) {
+            (new GameController())->edit($matches[1]);
+        } elseif (preg_match('#^games/(\d+)/update$#', $url, $matches)) {
+            if ($method === 'POST') {
+                (new GameController())->update($matches[1]);
+            }
+        } elseif (preg_match('#^games/(\d+)/delete$#', $url, $matches)) {
+            if ($method === 'POST') {
+                (new GameController())->delete($matches[1]);
+            }
+        } elseif (preg_match('#^games/(\d+)$#', $url, $matches)) {
+            (new GameController())->show($matches[1]);
+        }
+        // Handle dynamic routes: categories
+        elseif (preg_match('#^categories/(\d+)/edit$#', $url, $matches)) {
+            (new CategoryController())->edit($matches[1]);
+        } elseif (preg_match('#^categories/(\d+)/update$#', $url, $matches)) {
+            if ($method === 'POST') {
+                (new CategoryController())->update($matches[1]);
+            }
+        } elseif (preg_match('#^categories/(\d+)/delete$#', $url, $matches)) {
+            if ($method === 'POST') {
+                (new CategoryController())->destroy($matches[1]);
+            }
+        } else {
+            http_response_code(404);
+            echo "Page not found.";
+        }
         break;
 }

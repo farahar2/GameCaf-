@@ -5,7 +5,7 @@
 
     <!-- Header -->
     <div class="mb-10">
-        <a href="/games/<?= $game['id'] ?>"
+        <a href="games/<?= $game['id'] ?>"
            class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors mb-4 text-sm font-medium">
             <span class="material-symbols-outlined text-lg">arrow_back</span>
             Retour au Jeu
@@ -35,7 +35,7 @@
             </div>
         <?php endif; ?>
 
-        <form action="/games/<?= $game['id'] ?>/update"
+        <form action="games/<?= $game['id'] ?>/update"
               method="POST"
               class="space-y-6">
 
@@ -202,7 +202,7 @@
 
             <!-- Action Buttons -->
             <div class="flex gap-4 pt-2">
-                <a href="/games/<?= $game['id'] ?>"
+                <a href="games/<?= $game['id'] ?>"
                    class="flex-1 text-center py-4 bg-surface-container-high text-on-surface rounded-xl font-bold hover:bg-surface-variant transition-colors">
                     Annuler
                 </a>
@@ -221,7 +221,7 @@
                 <span class="material-symbols-outlined text-sm">warning</span>
                 Zone Dangereuse
             </h3>
-            <form action="/games/<?= $game['id'] ?>/delete"
+            <form action="games/<?= $game['id'] ?>/delete"
                   method="POST"
                   onsubmit="return confirm('Supprimer définitivement <?= htmlspecialchars(addslashes($game['name'])) ?>? Cette action est irréversible!')">
                 <button type="submit"
@@ -236,40 +236,17 @@
 
 </main>
 
-<script>
-    // Live image preview on URL change
-    document.getElementById('image-url-input')?.addEventListener('input', function () {
-        const img = document.getElementById('preview-img');
-        if (img && this.value.startsWith('http')) {
-            img.src = this.value;
-        }
-    });
-</script>
-
-<!-- Mobile Nav -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 backdrop-blur-xl shadow-[0_-4px_30px_rgba(53,16,0,0.05)] rounded-t-3xl">
-    <?php
-    $mobileNav  = [
-        ['uri' => '/dashboard', 'icon' => 'dashboard', 'label' => 'Dashboard'],
-        ['uri' => '/games',     'icon' => 'casino',     'label' => 'Games'],
-        ['uri' => '/sessions',  'icon' => 'style',      'label' => 'Sessions'],
-        ['uri' => '/reservations', 'icon' => 'event',   'label' => 'Bookings'],
-    ];
-    $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
-    foreach ($mobileNav as $item):
-        $isActive = str_starts_with($currentUri, $item['uri']);
-    ?>
-        <a href="<?= $item['uri'] ?>"
-           class="flex flex-col items-center px-3 py-1 rounded-2xl transition-all
-                  <?= $isActive ? 'bg-[#ffdbcc] text-[#8d4b00]' : 'text-stone-500' ?>">
-            <span class="material-symbols-outlined"
-                  style="<?= $isActive ? "font-variation-settings:'FILL' 1;" : '' ?>">
-                <?= $item['icon'] ?>
-            </span>
-            <span class="text-xs font-medium"><?= $item['label'] ?></span>
-        </a>
-    <?php endforeach; ?>
-</nav>
+    <script>
+        // Live image preview on URL change
+        document.getElementById('image-url-input')?.addEventListener('input', function () {
+            const img = document.getElementById('preview-img');
+            if (img && this.value.startsWith('http')) {
+                img.src = this.value;
+            }
+        });
+    </script>
+    
+    <div class="md:hidden h-20"></div>
 
 <div class="md:hidden h-20"></div>
 

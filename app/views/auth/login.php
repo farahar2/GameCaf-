@@ -149,7 +149,7 @@
         <?php endif; ?>
 
         <!-- Login Form -->
-        <form action="/login" method="POST" class="space-y-5">
+        <form action="login" method="POST" class="space-y-5">
 
             <!-- Email -->
             <div>
@@ -212,7 +212,7 @@
         <!-- Register Link -->
         <p class="text-center text-sm text-on-surface-variant">
             Pas encore de compte?
-            <a href="/register"
+            <a href="register"
                class="text-primary font-bold hover:underline ml-1">
                 Inscris-toi gratuitement →
             </a>

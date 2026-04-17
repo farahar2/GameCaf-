@@ -3,6 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\Session;
+use App\Models\Game;
+use App\Models\Table;
+use App\Models\Reservation;
 
 class SessionController {
     private Session $sessionModel;
@@ -13,16 +16,48 @@ class SessionController {
         // Sécurité obligatoire pour l'Admin
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
-            header('Location: /login');
+            header('Location: ' . BASE_URL . '/login');
             exit();
         }
     }
 
-    //Affiche le Dashboard
     public function dashboard(): void {
-        $activeSessions = $this->sessionModel->getActiveSessions();
+        $gameModel        = new Game();
+        $tableModel       = new Table();
+        $reservationModel = new Reservation();
+
+        $activeSessions   = $this->sessionModel->getActiveSessions();
+        $activeCount      = $this->sessionModel->countActive();
+        
+        $totalGames       = count($gameModel->getAll());
+        $allTables        = $tableModel->getAll();
+        $availableTables  = $tableModel->getAvailable();
+        
+        $todayReservations = $reservationModel->getToday();
+        $reservationCount  = count($todayReservations);
+
         $pageTitle = "Dashboard - Sessions Actives";
-       require_once __DIR__ . '/../views/sessions/dashboard.php';
+        require_once __DIR__ . '/../views/sessions/dashboard.php';
+    }
+
+    //Affiche le formulaire pour démarrer une session
+    public function start(): void {
+        $gameModel        = new Game();
+        $tableModel       = new Table();
+        $reservationModel = new Reservation();
+
+        $games        = $gameModel->getAll();
+        $tables       = $tableModel->getAvailable();
+        $reservations = $reservationModel->getToday();
+
+        $pageTitle = "Démarrer une Session";
+        $errors = [];
+        
+        if (isset($_GET['error'])) {
+            $errors[] = "Erreur lors du lancement de la session.";
+        }
+
+        require_once __DIR__ . '/../views/sessions/start.php';
     }
 
     //Traite le lancement d'une session
@@ -34,9 +69,9 @@ class SessionController {
             $adminId = (int)$_SESSION['user_id'];
 
             if ($this->sessionModel->start($resId, $gameId, $tableId, $adminId)) {
-                header('Location: /admin/sessions?msg=started');
+                header('Location: ' . BASE_URL . '/sessions?msg=started');
             } else {
-                header('Location: /admin/sessions?error=1');
+                header('Location: ' . BASE_URL . '/sessions?error=1');
             }
             exit();
         }
@@ -45,9 +80,9 @@ class SessionController {
     //Clôture la session
     public function stop(int $id): void {
         if ($this->sessionModel->finish($id)) {
-            header('Location: /admin/sessions?msg=finished');
+            header('Location: ' . BASE_URL . '/sessions?msg=finished');
         } else {
-            header('Location: /admin/sessions?error=stop_failed');
+            header('Location: ' . BASE_URL . '/sessions?error=stop_failed');
         }
         exit();
     }

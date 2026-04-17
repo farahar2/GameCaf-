@@ -4,7 +4,7 @@
 <main class="md:ml-72 px-6 pt-8 pb-32 max-w-3xl">
 
     <!-- Back -->
-    <a href="/tables"
+    <a href="tables"
        class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors mb-8 text-sm font-medium">
         <span class="material-symbols-outlined text-lg">arrow_back</span>
         Retour aux Tables
@@ -114,7 +114,7 @@
                     <?php endif; ?>
                 </p>
 
-                <form action="/tables/<?= $table['id'] ?>/availability" method="POST">
+                <form action="tables/<?= $table['id'] ?>/availability" method="POST">
                     <button type="submit"
                             class="w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform
                                 <?= $table['is_available']
@@ -138,20 +138,20 @@
                 <div class="space-y-3">
 
                     <?php if ($table['is_available']): ?>
-                        <a href="/sessions/start?table_id=<?= $table['id'] ?>"
+                        <a href="sessions/start?table_id=<?= $table['id'] ?>"
                            class="w-full py-3 bg-primary text-on-primary rounded-xl font-bold flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform shadow-md shadow-primary/20">
                             <span class="material-symbols-outlined">play_circle</span>
                             Démarrer une Session
                         </a>
                     <?php endif; ?>
 
-                    <a href="/reservations?table_id=<?= $table['id'] ?>"
+                    <a href="reservations?table_id=<?= $table['id'] ?>"
                        class="w-full py-3 bg-surface-container text-on-surface rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors">
                         <span class="material-symbols-outlined">event</span>
                         Voir les Réservations
                     </a>
 
-                    <a href="/sessions"
+                    <a href="sessions"
                        class="w-full py-3 bg-surface-container text-on-surface rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors">
                         <span class="material-symbols-outlined">history</span>
                         Voir les Sessions

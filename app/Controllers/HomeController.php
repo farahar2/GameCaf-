@@ -3,17 +3,17 @@
 namespace App\Controllers;
 
 use App\Models\Game;
-use App\Models\CafTable;
+use App\Models\Table;
 
 class HomeController
 {
     private Game $gameModel;
-    private CafTable $tableModel;
+    private Table $tableModel;
 
     public function __construct()
     {
         $this->gameModel  = new Game();
-        $this->tableModel = new CafTable();
+        $this->tableModel = new Table();
     }
 
     public function index(): void
@@ -28,6 +28,6 @@ class HomeController
         $games = $this->gameModel->getAll();
 
         $pageTitle = "Aji L3bo Café - Casablanca's Board Game Café";
-        include __DIR__ . '/../Views/home/index.php';
+        include __DIR__ . '/../views/home/index.php';
     }
 }

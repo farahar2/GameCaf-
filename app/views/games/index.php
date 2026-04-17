@@ -15,7 +15,7 @@
         </div>
 
         <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-            <form action="/games" method="GET" class="flex gap-3 flex-grow">
+            <form action="games" method="GET" class="flex gap-3 flex-grow">
 
                 <?php if (!empty($_GET['category_id'])): ?>
                     <input type="hidden" name="category_id"
@@ -39,8 +39,8 @@
                 </button>
             </form>
 
-            <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                <a href="/games/create"
+            <?php if (!empty($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                <a href="games/create"
                    class="bg-primary text-on-primary px-6 py-4 rounded-full font-bold flex items-center gap-2 hover:scale-105 transition-transform shadow-lg shadow-primary/20 whitespace-nowrap">
                     <span class="material-symbols-outlined text-[18px]">add</span>
                     Ajouter
@@ -51,7 +51,7 @@
 
     <!-- Category Chips -->
     <div class="flex gap-3 mb-10 overflow-x-auto pb-4">
-        <a href="/games"
+        <a href="games"
            class="px-6 py-2 rounded-full font-medium whitespace-nowrap transition-all
                   <?= empty($_GET['category_id'])
                       ? 'bg-primary text-on-primary shadow-md shadow-primary/20'
@@ -60,7 +60,7 @@
         </a>
         <?php foreach ($categories as $cat):
             $isActive = ($_GET['category_id'] ?? '') == $cat['id'];
-            $href     = '/games?category_id=' . $cat['id'];
+            $href     = 'games?category_id=' . $cat['id'];
             if (!empty($_GET['search'])) {
                 $href .= '&search=' . urlencode($_GET['search']);
             }
@@ -101,7 +101,7 @@
                     ? 'Aucun résultat pour "' . htmlspecialchars($_GET['search']) . '"'
                     : 'Aucun jeu dans cette catégorie.' ?>
             </p>
-            <a href="/games" class="bg-primary text-on-primary px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform">
+            <a href="games" class="bg-primary text-on-primary px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform">
                 Voir tous les jeux
             </a>
         </div>
@@ -115,9 +115,16 @@
 
                     <!-- Image -->
                     <div class="relative h-64 overflow-hidden">
+                        <?php
+                        $gameImg = !empty($game['image_url']) ? $game['image_url'] : 'https://placehold.co/400x300/ffdcc3/8d4b00?text=' . urlencode($game['name']);
+                        if (str_starts_with($gameImg, '/') && !str_starts_with($gameImg, '//')) {
+                            $gameImg = ltrim($gameImg, '/');
+                        }
+                        ?>
                         <img alt="<?= htmlspecialchars($game['name']) ?>"
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                             src="<?= htmlspecialchars($game['image_url'] ?? 'https://placehold.co/400x300/ffdcc3/8d4b00?text=' . urlencode($game['name'])) ?>"/>
+                             src="<?= htmlspecialchars($gameImg) ?>"
+                             onerror="this.onerror=null; this.src='https://placehold.co/400x300/ffdcc3/8d4b00?text=<?= urlencode(addslashes($game['name'])) ?>';"/>
 
                         <!-- Status Badge -->
                         <div class="absolute top-4 left-4">
@@ -129,13 +136,13 @@
 
                         <!-- Actions -->
                         <div class="absolute top-4 right-4">
-                            <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                            <?php if (!empty($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
                                 <div class="flex gap-2">
-                                    <a href="/games/<?= $game['id'] ?>/edit"
+                                    <a href="games/<?= $game['id'] ?>/edit"
                                        class="bg-white/90 backdrop-blur-md p-2 rounded-xl shadow-lg hover:bg-white transition-colors">
                                         <span class="material-symbols-outlined text-primary text-xl">edit</span>
                                     </a>
-                                    <form action="/games/<?= $game['id'] ?>/delete" method="POST"
+                                    <form action="games/<?= $game['id'] ?>/delete" method="POST"
                                           onsubmit="return confirm('Supprimer <?= htmlspecialchars(addslashes($game['name'])) ?>?')">
                                         <button type="submit"
                                                 class="bg-white/90 backdrop-blur-md p-2 rounded-xl shadow-lg hover:bg-white transition-colors">
@@ -171,7 +178,7 @@
                             <span class="<?= $catColor ?> text-[10px] font-bold px-2 py-0.5 rounded uppercase">
                                 <?= htmlspecialchars($game['category_name'] ?? 'Jeu') ?>
                             </span>
-                            <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                            <?php if (!empty($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
                                 <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase
                                     <?= ($game['stock'] ?? 0) > 0
                                         ? 'bg-secondary-container text-on-secondary-container'
@@ -215,7 +222,7 @@
                         </div>
 
                         <!-- Action -->
-                        <a href="/games/<?= $game['id'] ?>"
+                        <a href="games/<?= $game['id'] ?>"
                            class="mt-auto w-full text-center bg-surface-container-low text-primary font-bold py-4 rounded-xl hover:bg-primary hover:text-on-primary transition-all active:scale-95 block">
                             Voir Détails
                         </a>
@@ -230,32 +237,8 @@
 
 </main>
 
-<!-- Mobile Nav -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 backdrop-blur-xl shadow-[0_-4px_30px_rgba(53,16,0,0.05)] rounded-t-3xl">
-    <?php
-    $mobileNav  = [
-        ['uri' => '/',      'icon' => 'home',      'label' => 'Home'],
-        ['uri' => '/games', 'icon' => 'grid_view',  'label' => 'Catalog'],
-        ['uri' => '/reservations/create', 'icon' => 'event',  'label' => 'Book'],
-        ['uri' => '/reservations/my',     'icon' => 'person', 'label' => 'Profile'],
-    ];
-    $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
-    foreach ($mobileNav as $item):
-        $isActive = str_starts_with($currentUri, $item['uri'])
-                    && !($item['uri'] === '/' && $currentUri !== '/');
-    ?>
-        <a href="<?= $item['uri'] ?>"
-           class="flex flex-col items-center px-4 py-1 rounded-2xl transition-all
-                  <?= $isActive ? 'bg-[#ffdbcc] text-[#8d4b00]' : 'text-stone-500' ?>">
-            <span class="material-symbols-outlined mb-1"
-                  style="<?= $isActive ? "font-variation-settings:'FILL' 1;" : '' ?>">
-                <?= $item['icon'] ?>
-            </span>
-            <span class="text-xs font-medium"><?= $item['label'] ?></span>
-        </a>
-    <?php endforeach; ?>
-</nav>
-
-<div class="md:hidden h-20"></div>
+ 
+ <!-- Spacer for mobile nav handled by footer -->
+ <div class="md:hidden h-20"></div>
 
 <?php require __DIR__ . '/../layouts/footer.php'; ?>
