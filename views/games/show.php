@@ -1,111 +1,196 @@
-<div class="container py-4">
-    <div class="mb-4 d-flex justify-content-between align-items-center">
-        <div>
-            <h1 class="h3 mb-1">Game Details</h1>
-            <p class="text-muted mb-0">View full information about this board game.</p>
-        </div>
+<?php require __DIR__ . '/../layouts/header.php'; ?>
+<?php require __DIR__ . '/../layouts/admin_sidebar.php'; ?>
 
-        <a href="/games" class="btn btn-outline-secondary">
-            Back to Games
-        </a>
-    </div>
+<main class="md:ml-72 px-6 pt-8 pb-32 max-w-5xl">
 
-    <div class="card shadow-sm border-0">
-        <div class="row g-0">
-            <div class="col-md-4">
-                <?php if (!empty($game['image_url'])): ?>
-                    <img 
-                        src="<?= htmlspecialchars($game['image_url']) ?>" 
-                        alt="<?= htmlspecialchars($game['name']) ?>" 
-                        class="img-fluid rounded-start w-100 h-100 object-fit-cover"
-                        style="min-height: 300px;"
-                    >
-                <?php else: ?>
-                    <div class="d-flex align-items-center justify-content-center bg-light text-muted h-100" style="min-height: 300px;">
-                        No Image Available
-                    </div>
-                <?php endif; ?>
+    <!-- Back -->
+    <a href="/games"
+       class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors mb-8 text-sm font-medium">
+        <span class="material-symbols-outlined text-lg">arrow_back</span>
+        Retour au Catalogue
+    </a>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+        <!-- ===== Image Column ===== -->
+        <div class="space-y-4">
+
+            <!-- Main Image -->
+            <div class="w-full h-80 rounded-xl overflow-hidden bg-surface-container shadow-md">
+                <img alt="<?= htmlspecialchars($game['name']) ?>"
+                     class="w-full h-full object-cover"
+                     src="<?= htmlspecialchars($game['image_url'] ?? 'https://placehold.co/600x400/ffdcc3/8d4b00?text=' . urlencode($game['name'])) ?>"/>
             </div>
 
-            <div class="col-md-8">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                            <h2 class="card-title mb-1"><?= htmlspecialchars($game['name']) ?></h2>
-                            <p class="text-muted mb-0">
-                                Category: <strong><?= htmlspecialchars($game['category_name']) ?></strong>
-                            </p>
-                        </div>
+            <!-- Quick Info Cards -->
+            <div class="grid grid-cols-3 gap-3">
 
-                        <?php if ($game['is_available']): ?>
-                            <span class="badge bg-success fs-6">Available</span>
-                        <?php else: ?>
-                            <span class="badge bg-danger fs-6">Unavailable</span>
-                        <?php endif; ?>
+                <div class="bg-surface-container-lowest p-4 rounded-xl text-center border border-outline-variant/10">
+                    <span class="material-symbols-outlined text-primary mb-1 block">group</span>
+                    <p class="text-xs text-on-surface-variant mb-1">Joueurs</p>
+                    <p class="font-headline font-bold text-on-surface">
+                        <?= $game['min_players'] ?>-<?= $game['max_players'] ?>
+                    </p>
+                </div>
+
+                <div class="bg-surface-container-lowest p-4 rounded-xl text-center border border-outline-variant/10">
+                    <span class="material-symbols-outlined text-primary mb-1 block">schedule</span>
+                    <p class="text-xs text-on-surface-variant mb-1">Durée</p>
+                    <p class="font-headline font-bold text-on-surface">
+                        <?= $game['duration'] ?>min
+                    </p>
+                </div>
+
+                <div class="bg-surface-container-lowest p-4 rounded-xl text-center border border-outline-variant/10">
+                    <span class="material-symbols-outlined text-primary mb-1 block">inventory_2</span>
+                    <p class="text-xs text-on-surface-variant mb-1">Stock</p>
+                    <p class="font-headline font-bold text-on-surface">
+                        <?= $game['stock'] ?? 1 ?>
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ===== Info Column ===== -->
+        <div class="space-y-6">
+
+            <!-- Header -->
+            <div>
+                <div class="flex items-center gap-2 mb-3 flex-wrap">
+                    <?php
+                    $catColors = [
+                        'Stratégie' => 'bg-primary-fixed text-on-primary-fixed-variant',
+                        'Famille'   => 'bg-secondary-fixed text-on-secondary-fixed-variant',
+                        'Ambiance'  => 'bg-secondary-fixed text-on-secondary-fixed-variant',
+                        'Experts'   => 'bg-primary-fixed text-on-primary-fixed-variant',
+                    ];
+                    $catColor = $catColors[$game['category_name'] ?? ''] ?? 'bg-surface-container text-on-surface-variant';
+                    ?>
+                    <span class="<?= $catColor ?> text-xs font-bold px-3 py-1 rounded-full uppercase">
+                        <?= htmlspecialchars($game['category_name'] ?? 'Jeu') ?>
+                    </span>
+
+                    <span class="px-3 py-1 rounded-full text-xs font-bold uppercase
+                        <?= $game['is_available']
+                            ? 'bg-secondary text-white'
+                            : 'bg-tertiary text-white' ?>">
+                        <?= $game['is_available'] ? '✓ Disponible' : '✕ Occupé' ?>
+                    </span>
+                </div>
+
+                <h1 class="font-headline text-4xl font-extrabold text-on-background tracking-tight mb-2">
+                    <?= htmlspecialchars($game['name']) ?>
+                </h1>
+
+                <!-- Difficulty -->
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-on-surface-variant uppercase tracking-widest font-bold">
+                        Difficulté:
+                    </span>
+                    <div class="flex gap-1">
+                        <?php
+                        $diffMap = ['easy' => 1, 'medium' => 2, 'hard' => 3, 'expert' => 3];
+                        $level   = $diffMap[strtolower($game['difficulty'] ?? 'medium')] ?? 2;
+                        for ($i = 1; $i <= 3; $i++):
+                        ?>
+                            <div class="w-6 h-1.5 rounded-full <?= $i <= $level ? 'bg-primary' : 'bg-outline-variant' ?>"></div>
+                        <?php endfor; ?>
                     </div>
+                    <span class="text-xs text-on-surface-variant capitalize">
+                        <?= htmlspecialchars($game['difficulty'] ?? 'Medium') ?>
+                    </span>
+                </div>
+            </div>
 
-                    <hr>
+            <!-- Description -->
+            <?php if (!empty($game['description'])): ?>
+                <div class="bg-surface-container-low rounded-xl p-5">
+                    <h3 class="font-headline font-bold text-on-surface mb-2 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">info</span>
+                        Description
+                    </h3>
+                    <p class="text-on-surface-variant leading-relaxed text-sm">
+                        <?= nl2br(htmlspecialchars($game['description'])) ?>
+                    </p>
+                </div>
+            <?php endif; ?>
 
-                    <div class="row mb-3">
-                        <div class="col-md-6 mb-3">
-                            <h6 class="text-muted">Players</h6>
-                            <p class="mb-0">
-                                <?= htmlspecialchars($game['min_players']) ?> - <?= htmlspecialchars($game['max_players']) ?> players
-                            </p>
-                        </div>
+            <!-- Actions -->
+            <div class="space-y-3">
 
-                        <div class="col-md-6 mb-3">
-                            <h6 class="text-muted">Duration</h6>
-                            <p class="mb-0"><?= htmlspecialchars($game['duration']) ?> minutes</p>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <h6 class="text-muted">Difficulty</h6>
-                            <p class="mb-0">
-                                <span class="badge bg-info text-dark">
-                                    <?= htmlspecialchars(ucfirst($game['difficulty'])) ?>
-                                </span>
-                            </p>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <h6 class="text-muted">Stock</h6>
-                            <p class="mb-0"><?= htmlspecialchars($game['stock']) ?></p>
-                        </div>
+                <?php if ($game['is_available']): ?>
+                    <a href="/reservations/create?game_id=<?= $game['id'] ?>"
+                       class="w-full bg-primary text-on-primary py-4 rounded-xl font-bold text-lg hover:scale-[1.02] transition-transform shadow-lg shadow-primary/20 flex items-center justify-center gap-2 block text-center">
+                        <span class="material-symbols-outlined">event_available</span>
+                        Réserver avec ce Jeu
+                    </a>
+                <?php else: ?>
+                    <div class="w-full bg-surface-container text-on-surface-variant py-4 rounded-xl font-bold text-center">
+                        <span class="material-symbols-outlined align-middle mr-2">event_busy</span>
+                        Jeu actuellement occupé
                     </div>
+                <?php endif; ?>
 
-                    <div class="mb-4">
-                        <h6 class="text-muted">Description</h6>
-                        <p class="mb-0">
-                            <?= !empty($game['description']) ? nl2br(htmlspecialchars($game['description'])) : 'No description available.' ?>
-                        </p>
-                    </div>
-
-                    <div class="d-flex gap-2">
-                        <a href="/games" class="btn btn-secondary">
-                            Back
+                <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                    <div class="grid grid-cols-2 gap-3">
+                        <a href="/games/<?= $game['id'] ?>/edit"
+                           class="py-3 bg-surface-container-high text-on-surface rounded-xl font-bold text-center hover:bg-surface-variant transition-colors flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-lg">edit</span>
+                            Modifier
                         </a>
-
-                        <button
-                            type="button"
-                            class="btn btn-warning"
-                            data-bs-toggle="modal"
-                            data-bs-target="#editGameModal<?= $game['id'] ?>"
-                        >
-                            Edit
-                        </button>
-
-                        <form action="/games/delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this game?');">
-                            <input type="hidden" name="id" value="<?= htmlspecialchars($game['id']) ?>">
-                            <button type="submit" class="btn btn-danger">
-                                Delete
+                        <form action="/games/<?= $game['id'] ?>/delete"
+                              method="POST"
+                              onsubmit="return confirm('Supprimer <?= htmlspecialchars(addslashes($game['name'])) ?>?')">
+                            <button type="submit"
+                                    class="w-full py-3 bg-error-container text-on-error-container rounded-xl font-bold hover:bg-error hover:text-on-error transition-colors flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-lg">delete</span>
+                                Supprimer
                             </button>
                         </form>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                <?php endif; ?>
 
-<?php require __DIR__ . '/edit.php'; ?>
+            </div>
+
+            <!-- Game Added Date -->
+            <p class="text-xs text-on-surface-variant text-center">
+                Ajouté le <?= date('d/m/Y', strtotime($game['created_at'])) ?>
+            </p>
+
+        </div>
+
+    </div>
+
+</main>
+
+<!-- Mobile Nav -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 backdrop-blur-xl shadow-[0_-4px_30px_rgba(53,16,0,0.05)] rounded-t-3xl">
+    <?php
+    $mobileNav  = [
+        ['uri' => '/',      'icon' => 'home',      'label' => 'Home'],
+        ['uri' => '/games', 'icon' => 'grid_view',  'label' => 'Catalog'],
+        ['uri' => '/reservations/create', 'icon' => 'event',  'label' => 'Book'],
+        ['uri' => '/reservations/my',     'icon' => 'person', 'label' => 'Profile'],
+    ];
+    $currentUri = $_SERVER['REQUEST_URI'] ?? '/';
+    foreach ($mobileNav as $item):
+        $isActive = str_starts_with($currentUri, $item['uri'])
+                    && !($item['uri'] === '/' && $currentUri !== '/');
+    ?>
+        <a href="<?= $item['uri'] ?>"
+           class="flex flex-col items-center px-4 py-1 rounded-2xl transition-all
+                  <?= $isActive ? 'bg-[#ffdbcc] text-[#8d4b00]' : 'text-stone-500' ?>">
+            <span class="material-symbols-outlined mb-1"
+                  style="<?= $isActive ? "font-variation-settings:'FILL' 1;" : '' ?>">
+                <?= $item['icon'] ?>
+            </span>
+            <span class="text-xs font-medium"><?= $item['label'] ?></span>
+        </a>
+    <?php endforeach; ?>
+</nav>
+
+<div class="md:hidden h-20"></div>
+
+<?php require __DIR__ . '/../layouts/footer.php'; ?>
