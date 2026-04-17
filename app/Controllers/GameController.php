@@ -16,10 +16,10 @@ class GameController
         $this->categoryModel = new Category();
     }
 
-    public function index(): void
+      public function index(): void
     {
         $categoryId = $_GET['category_id'] ?? null;
-        $keyword = trim($_GET['search'] ?? '');
+        $keyword    = trim($_GET['search'] ?? '');
 
         if (!empty($keyword)) {
             $games = $this->gameModel->search($keyword);
@@ -29,9 +29,11 @@ class GameController
             $games = $this->gameModel->getAll();
         }
 
+        // Categories needed for filter chips in view
         $categories = $this->categoryModel->getAll();
+        $pageTitle  = "Catalogue de Jeux";
 
-        require_once __DIR__ . '/../../views/games/index.php';
+        include __DIR__ . '/../Views/games/index.php';
     }
 
     public function show(): void

@@ -152,4 +152,15 @@ class Reservation
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll();
     }
+
+    public function countByStatus(string $status): int
+{
+    $sql  = "SELECT COUNT(*) as total 
+             FROM reservations 
+             WHERE status = :status";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute(['status' => $status]);
+    $result = $stmt->fetch();
+    return (int) $result['total'];
+}
 }

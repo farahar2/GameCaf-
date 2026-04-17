@@ -13,112 +13,120 @@ class CategoryController
         $this->categoryModel = new Category();
     }
 
+    // List all categories
     public function index(): void
     {
-        $categories = $this->categoryModel->getAll();
-        require_once __DIR__ . '/../../views/categories/index.php';
+        $this->guardAdmin();
+
+        $categories = $this->categoryModel->getAllWithCount();
+        $pageTitle  = "Catégories";
+        include __DIR__ . '/../Views/categories/index.php';
     }
 
-    public function show(): void
-    {
-        $id = $_GET['id'] ?? null;
-
-        if (!$id) {
-            echo "Category ID is required.";
-            return;
-        }
-
-        $category = $this->categoryModel->getById((int) $id);
-
-        if (!$category) {
-            http_response_code(404);
-            echo "Category not found.";
-            return;
-        }
-
-        require_once __DIR__ . '/../../views/categories/show.php';
-    }
-
+    // Show create form
     public function create(): void
     {
-        require_once __DIR__ . '/../../views/categories/create.php';
+        $this->guardAdmin();
+
+        $pageTitle = "Nouvelle Catégorie";
+        include __DIR__ . '/../Views/categories/create.php';
     }
 
+    // Store new category
     public function store(): void
     {
-        $data = [
-            'name' => trim($_POST['name'] ?? ''),
-            'description' => trim($_POST['description'] ?? '')
-        ];
+        $this->guardAdmin();
 
-        if (empty($data['name'])) {
-            echo "Category name is required.";
+        $errors = [];
+
+        if (empty(trim($_POST['name'] ?? ''))) {
+            $errors[] = "Le nom de la catégorie est obligatoire.";
+        }
+
+        if (!empty($errors)) {
+            $pageTitle = "Nouvelle Catégorie";
+            include __DIR__ . '/../Views/categories/create.php';
             return;
         }
 
-        $this->categoryModel->create($data);
+        $this->categoryModel->create([
+            'name'        => trim($_POST['name']),
+            'description' => trim($_POST['description'] ?? ''),
+        ]);
 
-        header('Location: /categories');
+        header('Location: /categories?success=created');
         exit;
     }
 
-    public function edit(): void
+    // Show edit form
+    public function edit(string $id): void
     {
-        $id = $_GET['id'] ?? null;
+        $this->guardAdmin();
 
-        if (!$id) {
-            echo "Category ID is required.";
-            return;
-        }
-
-        $category = $this->categoryModel->getById((int) $id);
+        $category = $this->categoryModel->getByIdWithCount((int) $id);
 
         if (!$category) {
             http_response_code(404);
-            echo "Category not found.";
+            echo "Catégorie introuvable.";
             return;
         }
 
-        require_once __DIR__ . '/../../views/categories/edit.php';
+        $pageTitle = "Modifier: " . htmlspecialchars($category['name']);
+        include __DIR__ . '/../Views/categories/create.php'; // Reuse create view!
     }
 
-    public function update(): void
+    // Update category
+    public function update(string $id): void
     {
-        $id = $_POST['id'] ?? null;
+        $this->guardAdmin();
 
-        if (!$id) {
-            echo "Category ID is required.";
+        $errors = [];
+
+        if (empty(trim($_POST['name'] ?? ''))) {
+            $errors[] = "Le nom est obligatoire.";
+        }
+
+        if (!empty($errors)) {
+            $category  = $this->categoryModel->getByIdWithCount((int) $id);
+            $pageTitle = "Modifier Catégorie";
+            include __DIR__ . '/../Views/categories/create.php';
             return;
         }
 
-        $data = [
-            'name' => trim($_POST['name'] ?? ''),
-            'description' => trim($_POST['description'] ?? '')
-        ];
+        $this->categoryModel->update((int) $id, [
+            'name'        => trim($_POST['name']),
+            'description' => trim($_POST['description'] ?? ''),
+        ]);
 
-        if (empty($data['name'])) {
-            echo "Category name is required.";
-            return;
-        }
-
-        $this->categoryModel->update((int) $id, $data);
-
-        header('Location: /categories');
+        header('Location: /categories?success=updated');
         exit;
     }
 
-    public function delete(): void
+    // Delete category
+    public function destroy(string $id): void
     {
-        $id = $_POST['id'] ?? null;
+        $this->guardAdmin();
 
-        if (!$id) {
-            echo "Category ID is required.";
-            return;
+        $deleted = $this->categoryModel->delete((int) $id);
+
+        if ($deleted) {
+            header('Location: /categories?success=deleted');
+        } else {
+            header('Location: /categories?error=has_games');
         }
-
-        $this->categoryModel->delete((int) $id);
-
-        header('Location: /categories');
         exit;
+    }
+
+    // Admin guard
+    private function guardAdmin(): void
+    {
+        if (empty($_SESSION['user_id'])) {
+            header('Location: /login');
+            exit;
+        }
+        if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+            header('Location: /');
+            exit;
+        }
     }
 }
